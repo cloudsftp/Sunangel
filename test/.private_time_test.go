@@ -1,4 +1,4 @@
-package sunangel
+package time
 
 import (
 	"testing"
@@ -23,24 +23,9 @@ func TestJulianCenturiesSince2000ToCustom(t *testing.T) {
 	test.AssertPreciselyEqual(t, got, want)
 }
 
-func TestStarTimeHoursAt(t *testing.T) {
-	got := starTimeHoursAt(test.DateWiki)
-	want := float64(2.9759)
-
-	test.AssertApproxEqual(t, got, want)
-}
-
-func TestStartTimeHoursAtCustom(t *testing.T) {
-	// date has to be in UTC for unexportet functions
-	got := starTimeHoursAt(test.DateCustom.UTC())
-	want := float64(1.947950604654)
-
-	test.AssertPreciselyEqual(t, got, want)
-}
-
 func TestStarTimeAt(t *testing.T) {
 	got := starTimeAt(test.DateWiki)
-	want := float64(44.6387)
+	want := float64(2.9759)
 
 	test.AssertApproxEqual(t, got, want)
 }
@@ -48,7 +33,37 @@ func TestStarTimeAt(t *testing.T) {
 func TestStartTimeAtCustom(t *testing.T) {
 	// date has to be in UTC for unexportet functions
 	got := starTimeAt(test.DateCustom.UTC())
+	want := float64(1.947950604654)
+
+	test.AssertPreciselyEqual(t, got, want)
+}
+
+func TestGreenwichHourAngleAt(t *testing.T) {
+	got := greenwichHourAngleAt(test.DateWiki)
+	want := float64(44.6387)
+
+	test.AssertApproxEqual(t, got, want)
+}
+
+func TestGreenwichHourAngleAtCustom(t *testing.T) {
+	// date has to be in UTC for unexportet functions
+	got := greenwichHourAngleAt(test.DateCustom.UTC())
 	want := float64(29.219259069814)
+
+	test.AssertPreciselyEqual(t, got, want)
+}
+
+func TestHourAngleAt(t *testing.T) {
+	got := hourAngleAt(test.DateWiki, float64(11.6))
+	want := float64(56.2387)
+
+	test.AssertApproxEqual(t, got, want)
+}
+
+func TestHourAngleAtCustom(t *testing.T) {
+	// date has to be in UTC for unexportet functions
+	got := hourAngleAt(test.DateCustom.UTC(), float64(9.58675))
+	want := float64(38.806009069814)
 
 	test.AssertPreciselyEqual(t, got, want)
 }
