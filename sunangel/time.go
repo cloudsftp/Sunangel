@@ -1,6 +1,7 @@
 package sunangel
 
 import (
+	"math"
 	"time"
 
 	"github.com/soniakeys/meeus/v3/julian"
@@ -12,6 +13,7 @@ const (
 	STAR_TIME_C0           float64 = 6.697376
 	STARTIME_C1            float64 = 2400.05134
 	STARTIME_C2            float64 = 1.002738
+	STAR_TIME_HOUR         float64 = 15
 )
 
 // for all unexportet functions: date must be in UTC
@@ -32,5 +34,8 @@ func julianCenturiesSince2000To(date time.Time) float64 {
 func starTimeAt(date time.Time) float64 {
 	t0 := julianCenturiesSince2000To(date)
 	t := float64(date.Hour()) + float64(date.Minute())/60
-	return STAR_TIME_C0 + STARTIME_C1*t0 + STARTIME_C2*t
+
+	starTime := STAR_TIME_C0 + STARTIME_C1*t0 + STARTIME_C2*t
+	starTime = math.Mod(starTime, 24)
+	return starTime
 }

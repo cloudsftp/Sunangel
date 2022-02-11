@@ -25,7 +25,7 @@ func TestJulianCenturiesSince2000ToCustom(t *testing.T) {
 
 func TestStarTimeAt(t *testing.T) {
 	got := starTimeAt(test.DateWiki)
-	want := float64(170.9759)
+	want := float64(2.9759)
 
 	test.AssertApproxEqual(t, got, want)
 }
@@ -33,7 +33,7 @@ func TestStarTimeAt(t *testing.T) {
 func TestStartTimeAtCustom(t *testing.T) {
 	// date has to be in UTC for unexportet functions
 	got := starTimeAt(test.DateCustom.UTC())
-	want := float64(553.947950604654)
+	want := float64(1.947950604654)
 
 	test.AssertPreciselyEqual(t, got, want)
 }
