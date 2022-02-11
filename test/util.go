@@ -12,7 +12,7 @@ var DateCustom = time.Date(2022, time.February, 11, 17, 30, 0, 0, time.FixedZone
 func assertApproxEqualEpsilon(t *testing.T, got, want, epsilon float64) {
 	difference := math.Abs(got - want)
 	if difference > epsilon {
-		t.Errorf("difference %.13f too big, got %.13f want %.13f", difference, got, want)
+		t.Errorf("difference %.15f too big, got %.15f want %.15f", difference, got, want)
 	}
 }
 
