@@ -1,4 +1,4 @@
-package time
+package startime
 
 import (
 	"testing"
@@ -53,14 +53,14 @@ func TestGreenwichHourAngleAtCustom(t *testing.T) {
 	test.AssertPreciselyEqual(t, got, want)
 }
 
-func TestHourAngleAt(t *testing.T) {
+func TestHourAngleAtPrivate(t *testing.T) {
 	got := hourAngleAt(test.DateWiki, float64(11.6))
 	want := float64(56.2387)
 
 	test.AssertApproxEqual(t, got, want)
 }
 
-func TestHourAngleAtCustom(t *testing.T) {
+func TestHourAngleAtCustomPrivate(t *testing.T) {
 	// date has to be in UTC for unexportet functions
 	got := hourAngleAt(test.DateCustom.UTC(), float64(9.58675))
 	want := float64(38.806009069814)

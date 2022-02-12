@@ -1,4 +1,4 @@
-package time
+package startime
 
 import (
 	"math"
