@@ -19,3 +19,17 @@ func TestHourAngleAtCustom(t *testing.T) {
 
 	AssertPreciselyEqual(t, got, want)
 }
+
+func TestJulianDaysSince2000At(t *testing.T) {
+	got := startime.JulianDaysSince2000At(DateWiki)
+	want := float64(2408.75)
+
+	AssertApproxEqual(t, got, want)
+}
+
+func TestJulianDaysSince2000AtCustom(t *testing.T) {
+	got := startime.JulianDaysSince2000At(DateCustom)
+	want := float64(8077.1875)
+
+	AssertApproxEqual(t, got, want)
+}

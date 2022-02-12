@@ -52,3 +52,7 @@ func hourAngleAt(date time.Time, longitude float64) float64 {
 func HourAngleAt(date time.Time, longitude float64) float64 {
 	return hourAngleAt(date.UTC(), longitude)
 }
+
+func JulianDaysSince2000At(date time.Time) float64 {
+	return julian.TimeToJD(date.UTC()) - jd2000
+}
