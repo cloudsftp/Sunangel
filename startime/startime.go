@@ -23,17 +23,18 @@ func midnightOf(date time.Time) time.Time {
 	year := date.Year()
 	month := date.Month()
 	day := date.Day()
+	location := date.Location()
 
-	return time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
+	return time.Date(year, month, day, 0, 0, 0, 0, location)
 }
 
-func julianCenturiesSince2000To(date time.Time) float64 {
+func julianCenturiesSince2000ToMidnightOf(date time.Time) float64 {
 	date = midnightOf(date)
 	return (julian.TimeToJD(date) - jd2000) / julianDaysInCentury
 }
 
 func starTimeAt(date time.Time) float64 {
-	t0 := julianCenturiesSince2000To(date)
+	t0 := julianCenturiesSince2000ToMidnightOf(date)
 	t := float64(date.Hour()) + float64(date.Minute())/60
 
 	starTime := starTimeC0 + starTimeC1*t0 + starTimeC2*t
