@@ -3,6 +3,8 @@ package startime
 import (
 	"math"
 	"time"
+
+	"github.com/cloudsftp/Sunangel/angle"
 )
 
 func rightAscensionOfSunAt(date time.Time) float64 {
@@ -13,7 +15,7 @@ func rightAscensionOfSunAt(date time.Time) float64 {
 	if math.Cos(lambda) < 0 {
 		alpha += math.Pi
 	}
-	return math.Mod(alpha, 2*math.Pi)
+	return angle.NormalizeRadians(alpha)
 }
 
 func declinationOfSunAt(date time.Time) float64 {
@@ -21,5 +23,5 @@ func declinationOfSunAt(date time.Time) float64 {
 	lambda := eclipticLengthOfSunAt(date)
 
 	delta := math.Asin(math.Sin(epsilon) * math.Sin(lambda))
-	return math.Mod(delta, 2*math.Pi)
+	return angle.NormalizeRadians(delta)
 }

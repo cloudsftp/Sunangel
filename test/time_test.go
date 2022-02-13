@@ -8,7 +8,7 @@ import (
 )
 
 func TestHourAngleOfSunAt(t *testing.T) {
-	got := startime.HourAngleOfSunAt(dateWiki, longitudeWiki) + 2*math.Pi
+	got := startime.HourAngleOfSunAt(dateWiki, longitudeWiki)
 	want := float64((2 * math.Pi) - 1.394169)
 
 	assertApproxEqual(t, got, want)

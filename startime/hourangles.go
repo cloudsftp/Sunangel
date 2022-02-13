@@ -3,15 +3,18 @@ package startime
 import (
 	"math"
 	"time"
+
+	"github.com/cloudsftp/Sunangel/angle"
 )
 
 const (
-	starTimeC0             float64 = 6.697376
-	starTimeC1             float64 = 2400.05134
-	starTimeC2             float64 = 1.002738
-	hoursInDay             float64 = 24
-	starTimeDegreesPerHour float64 = 15 * (math.Pi / 180)
+	starTimeC0 float64 = 6.697376
+	starTimeC1 float64 = 2400.05134
+	starTimeC2 float64 = 1.002738
+	hoursInDay float64 = 24
 )
+
+var starTimeDegreesPerHour float64 = angle.RadiansFromDegrees(15)
 
 func starTimeAt(date time.Time) float64 {
 	t0 := julianCenturiesSince2000ToMidnightOf(date)
@@ -25,22 +28,21 @@ func starTimeAt(date time.Time) float64 {
 func greenwichHourAngleOfSpringPointAt(date time.Time) float64 {
 	thetaGh := starTimeAt(date)
 	thetaG := thetaGh * starTimeDegreesPerHour
-	return math.Mod(thetaG, 2*math.Pi)
+	return angle.NormalizeRadians(thetaG)
 }
 
 func hourAngleOfSpringPointAt(date time.Time, longitude float64) float64 {
 	thetaG := greenwichHourAngleOfSpringPointAt(date)
 	theta := thetaG + longitude
-	return math.Mod(theta, 2*math.Pi)
+	return angle.NormalizeRadians(theta)
 }
 
 func HourAngleOfSunAt(date time.Time, longitude float64) float64 {
 	date = date.UTC() // all exported functions have to make sure, dates are UTC
-	longitude *= (math.Pi / 180)
 
 	theta := hourAngleOfSpringPointAt(date, longitude)
 	alpha := rightAscensionOfSunAt(date)
 
 	tau := theta - alpha
-	return math.Mod(tau, 2*math.Pi)
+	return angle.NormalizeRadians(tau)
 }

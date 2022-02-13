@@ -8,8 +8,8 @@ import (
 
 var (
 	dateWiki              = time.Date(2006, time.August, 6, 6, 0, 0, 0, time.UTC)
-	latitudeWiki  float64 = 48.1
-	longitudeWiki float64 = 11.6
+	latitudeWiki  float64 = 0.839503
+	longitudeWiki float64 = 0.202458
 
 	dateCustom              = time.Date(2022, time.February, 11, 17, 30, 0, 0, time.FixedZone("Berlin, DE", 3600))
 	latitudeCustom  float64 = 48.8185
