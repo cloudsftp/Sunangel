@@ -1,10 +1,11 @@
-package startime
+package sunangel
 
 import (
 	"math"
 	"time"
 
 	"github.com/cloudsftp/Sunangel/angle"
+	"github.com/cloudsftp/Sunangel/startime"
 )
 
 var (
@@ -23,13 +24,13 @@ var (
 
 func meanEclipticLengthOfSunAt(date time.Time) float64 {
 	l := meanEclipticLengthOfSunC0
-	l += meanEclipticLengthOfSunC1 * julianDaysSince2000At(date)
+	l += meanEclipticLengthOfSunC1 * startime.JulianDaysSince2000At(date)
 	return angle.NormalizeRadians(l)
 }
 
 func meanAnomalyOfSunAt(date time.Time) float64 {
 	g := meanAnomalyOfSunC0
-	g += meanAnomalyOfSunC1 * julianDaysSince2000At(date)
+	g += meanAnomalyOfSunC1 * startime.JulianDaysSince2000At(date)
 	return angle.NormalizeRadians(g)
 }
 
@@ -45,6 +46,6 @@ func eclipticLengthOfSunAt(date time.Time) float64 {
 
 func skewOfEclipticAt(date time.Time) float64 {
 	epsilon := skewOfEclipticC0
-	epsilon += skewOfEclipticC1 * julianDaysSince2000At(date)
+	epsilon += skewOfEclipticC1 * startime.JulianDaysSince2000At(date)
 	return angle.NormalizeRadians(epsilon)
 }

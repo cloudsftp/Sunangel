@@ -1,10 +1,11 @@
-package startime
+package sunangel
 
 import (
 	"math"
 	"time"
 
 	"github.com/cloudsftp/Sunangel/angle"
+	"github.com/cloudsftp/Sunangel/startime"
 )
 
 const (
@@ -17,7 +18,7 @@ const (
 var starTimeDegreesPerHour float64 = angle.RadiansFromDegrees(15)
 
 func starTimeAt(date time.Time) float64 {
-	t0 := julianCenturiesSince2000ToMidnightOf(date)
+	t0 := startime.JulianCenturiesSince2000ToMidnightOf(date)
 	t := float64(date.Hour()) + float64(date.Minute())/60
 
 	starTime := starTimeC0 + starTimeC1*t0 + starTimeC2*t
@@ -37,7 +38,7 @@ func hourAngleOfSpringPointAt(date time.Time, longitude float64) float64 {
 	return angle.NormalizeRadians(theta)
 }
 
-func HourAngleOfSunAt(date time.Time, longitude float64) float64 {
+func hourAngleOfSunAt(date time.Time, longitude float64) float64 {
 	date = date.UTC() // all exported functions have to make sure, dates are UTC
 
 	theta := hourAngleOfSpringPointAt(date, longitude)

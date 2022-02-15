@@ -11,7 +11,7 @@ const (
 	julianDaysInCentury float64 = 36525
 )
 
-func julianDaysSince2000At(date time.Time) float64 {
+func JulianDaysSince2000At(date time.Time) float64 {
 	jd := julian.TimeToJD(date) - jd2000
 	return jd
 }
@@ -25,14 +25,14 @@ func midnightOf(date time.Time) time.Time {
 	return time.Date(year, month, day, 0, 0, 0, 0, location)
 }
 
-func julianDaysSince2000ToMidnightOf(date time.Time) float64 {
+func JulianDaysSince2000ToMidnightOf(date time.Time) float64 {
 	date = midnightOf(date)
-	jd0 := julianDaysSince2000At(date)
+	jd0 := JulianDaysSince2000At(date)
 	return jd0
 }
 
-func julianCenturiesSince2000ToMidnightOf(date time.Time) float64 {
-	jd0 := julianDaysSince2000ToMidnightOf(date)
+func JulianCenturiesSince2000ToMidnightOf(date time.Time) float64 {
+	jd0 := JulianDaysSince2000ToMidnightOf(date)
 	t0 := jd0 / julianDaysInCentury
 	return t0
 }
