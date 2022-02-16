@@ -1,7 +1,6 @@
 package test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/cloudsftp/Sunangel/angle"
@@ -24,6 +23,14 @@ func TestAzimutSunAngleAt(t *testing.T) {
 
 func TestAltitudeSunangleAtCustom(t *testing.T) {
 	got := sunangel.AltitudeSunAngleAt(dateCustom, latitudeCustom, longitudeCustom)
+	want := float64(0.00069)
 
-	fmt.Printf("got %.5f\n", angle.DegreesFromRadians(got))
+	assertApproxEqual(t, got, want)
+}
+
+func TestAzimutSunAngleAtCustom(t *testing.T) {
+	got := sunangel.AzimutSunAngleAt(dateCustom, latitudeCustom, longitudeCustom)
+	want := float64(1.19716)
+
+	assertApproxEqual(t, got, want)
 }

@@ -11,7 +11,7 @@ var (
 	latitudeWiki  float64 = 0.839503
 	longitudeWiki float64 = 0.202458
 
-	dateCustom              = time.Date(2022, time.February, 11, 17, 30, 25, 0, time.FixedZone("Berlin, DE", 3600))
+	dateCustom              = time.Date(2022, time.February, 11, 17, 30, 0, 0, time.FixedZone("Berlin, DE", 3600))
 	latitudeCustom  float64 = 0.852043560884
 	longitudeCustom float64 = 0.167320701131
 )

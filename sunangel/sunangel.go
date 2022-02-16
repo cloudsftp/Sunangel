@@ -7,6 +7,8 @@ import (
 	"github.com/cloudsftp/Sunangel/angle"
 )
 
+// AltitudeSunAngleAt returns the altitude of the sun at a given time and location.
+// The latitude is the vertical angle between the sun and the horizon.
 func AltitudeSunAngleAt(date time.Time, latitude, longitude float64) float64 {
 	delta := declinationOfSunAt(date)
 	tau := hourAngleOfSunAt(date, longitude)
@@ -18,6 +20,8 @@ func AltitudeSunAngleAt(date time.Time, latitude, longitude float64) float64 {
 	return angle.NormalizeRadians(result)
 }
 
+// AzimutSunAngleAt returns the azimut of the sun at a given time and location.
+// The azimut is the horizontal angle between the sun to the orientation north.
 func AzimutSunAngleAt(date time.Time, latitude, longitude float64) float64 {
 	delta := declinationOfSunAt(date)
 	tau := hourAngleOfSunAt(date, longitude)
