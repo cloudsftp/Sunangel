@@ -36,3 +36,12 @@ func JulianCenturiesSince2000ToMidnightOf(date time.Time) float64 {
 	t0 := jd0 / julianDaysInCentury
 	return t0
 }
+
+func TimeOfDayAsDecimal(date time.Time) float64 {
+	timeOfDay := float64(date.Hour())
+	timeOfDay += float64(date.Minute()) / 60
+	timeOfDay += float64(date.Second()) / 6000
+	timeOfDay += float64(date.Nanosecond()) / 1e13
+
+	return timeOfDay
+}

@@ -3,6 +3,8 @@ package sunangel
 import (
 	"math"
 	"time"
+
+	"github.com/cloudsftp/Sunangel/angle"
 )
 
 func AltitudeSunAngleAt(date time.Time, latitude, longitude float64) float64 {
@@ -12,7 +14,8 @@ func AltitudeSunAngleAt(date time.Time, latitude, longitude float64) float64 {
 	argument := math.Cos(delta) * math.Cos(tau) * math.Cos(latitude)
 	argument += math.Sin(delta) * math.Sin(latitude)
 
-	return math.Asin(argument)
+	result := math.Asin(argument)
+	return angle.NormalizeRadians(result)
 }
 
 func AzimutSunAngleAt(date time.Time, latitude, longitude float64) float64 {
@@ -28,5 +31,5 @@ func AzimutSunAngleAt(date time.Time, latitude, longitude float64) float64 {
 	if denominator < 0 {
 		result += math.Pi
 	}
-	return result
+	return angle.NormalizeRadians(result)
 }

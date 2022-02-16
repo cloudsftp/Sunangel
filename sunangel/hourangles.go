@@ -19,7 +19,7 @@ var starTimeDegreesPerHour float64 = angle.RadiansFromDegrees(15)
 
 func starTimeAt(date time.Time) float64 {
 	t0 := startime.JulianCenturiesSince2000ToMidnightOf(date)
-	t := float64(date.Hour()) + float64(date.Minute())/60
+	t := startime.TimeOfDayAsDecimal(date)
 
 	starTime := starTimeC0 + starTimeC1*t0 + starTimeC2*t
 	starTime = math.Mod(starTime, hoursInDay)
