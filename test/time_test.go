@@ -2,20 +2,51 @@ package test
 
 import (
 	"testing"
+	"time"
 
-	"github.com/cloudsftp/Sunangel/time"
+	"github.com/cloudsftp/Sunangel/startime"
 )
 
-func TestHourAngleAt(t *testing.T) {
-	got := time.HourAngleAt(DateWiki, float64(11.6))
-	want := float64(56.2387)
+func TestJulianDaysSince2000At(t *testing.T) {
+	got := startime.JulianDaysSince2000At(dateWiki)
+	want := float64(2408.75)
 
-	AssertApproxEqual(t, got, want)
+	assertPreciselyEqual(t, got, want)
 }
 
-func TestHourAngleAtCustom(t *testing.T) {
-	got := time.HourAngleAt(DateCustom, float64(9.58675))
-	want := float64(38.806009069814)
+func TestJulianDaysSince2000ToMidnightOf(t *testing.T) {
+	got := startime.JulianDaysSince2000ToMidnightOf(dateWiki)
+	want := float64(2408.5)
 
-	AssertPreciselyEqual(t, got, want)
+	assertPreciselyEqual(t, got, want)
+}
+
+func TestJulianCenturiesSince2000ToMidnightOf(t *testing.T) {
+	got := startime.JulianCenturiesSince2000ToMidnightOf(dateWiki)
+	want := float64(0.06594113621)
+
+	assertApproxEqual(t, got, want)
+}
+
+func testTimeOfDayAsDecimalGeneral(t *testing.T, date time.Time, want float64) {
+	got := startime.TimeOfDayAsDecimal(date)
+
+	assertPreciselyEqual(t, got, want)
+}
+
+func TestTimeOfDayAsDecimal(t *testing.T) {
+	date := time.Date(0, time.January, 1, 6, 0, 0, 0, time.UTC)
+	testTimeOfDayAsDecimalGeneral(t, date, float64(6))
+
+	date = time.Date(0, time.January, 1, 0, 6, 0, 0, time.UTC)
+	testTimeOfDayAsDecimalGeneral(t, date, float64(0.1))
+
+	date = time.Date(0, time.January, 1, 0, 0, 12, 0, time.UTC)
+	testTimeOfDayAsDecimalGeneral(t, date, float64(0.002))
+
+	date = time.Date(0, time.January, 1, 0, 0, 0, 1000, time.UTC)
+	testTimeOfDayAsDecimalGeneral(t, date, float64(0.0000000001))
+
+	date = time.Date(0, time.January, 1, 16, 18, 24, 1000000, time.UTC)
+	testTimeOfDayAsDecimalGeneral(t, date, float64(16.3040001))
 }
