@@ -10,10 +10,10 @@ import (
 
 var (
 	dateWiki         = time.Date(2006, time.August, 6, 6, 0, 0, 0, time.UTC)
-	locationMuenchen = *location.NewLocation(0.839503, 0.202458)
+	locationMuenchen = *location.NewLocation(48.1, 11.6)
 
 	dateCustom        = time.Date(2022, time.February, 11, 17, 30, 0, 0, time.FixedZone("Berlin, DE", 3600))
-	locationGaensberg = *location.NewLocation(0.852043560884, 0.167320701131)
+	locationGaensberg = *location.NewLocation(48.8185, 9.58677)
 )
 
 func assertApproxEqualEpsilon(t *testing.T, got, want, epsilon float64) {

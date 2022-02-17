@@ -34,11 +34,14 @@ func correctedSunAngleAt(date time.Time, place location.Location) float64 {
 }
 
 func uncorrectedSunAngleAt(date time.Time, place location.Location) float64 {
-	delta := declinationOfSunAt(date)
-	tau := hourAngleOfSunAt(date, place.Longitude)
+	latitude := angle.RadiansFromDegrees(place.Latitude)
+	longitude := angle.RadiansFromDegrees(place.Longitude)
 
-	argument := math.Cos(delta) * math.Cos(tau) * math.Cos(place.Latitude)
-	argument += math.Sin(delta) * math.Sin(place.Latitude)
+	delta := declinationOfSunAt(date)
+	tau := hourAngleOfSunAt(date, longitude)
+
+	argument := math.Cos(delta) * math.Cos(tau) * math.Cos(latitude)
+	argument += math.Sin(delta) * math.Sin(latitude)
 
 	result := math.Asin(argument)
 	return angle.NormalizeRadians(result)
@@ -47,12 +50,15 @@ func uncorrectedSunAngleAt(date time.Time, place location.Location) float64 {
 // AzimutSunAngleAt returns the azimut of the sun at a given time and place.
 // The azimut is the horizontal angle between the sun to the orientation north.
 func AzimutSunAngleAt(date time.Time, place location.Location) float64 {
+	latitude := angle.RadiansFromDegrees(place.Latitude)
+	longitude := angle.RadiansFromDegrees(place.Longitude)
+
 	delta := declinationOfSunAt(date)
-	tau := hourAngleOfSunAt(date, place.Longitude)
+	tau := hourAngleOfSunAt(date, longitude)
 
 	nominator := math.Sin(tau)
-	denominator := math.Cos(tau) * math.Sin(place.Latitude)
-	denominator -= math.Tan(delta) * math.Cos(place.Latitude)
+	denominator := math.Cos(tau) * math.Sin(latitude)
+	denominator -= math.Tan(delta) * math.Cos(latitude)
 
 	argument := nominator / denominator
 	result := math.Atan(argument)
