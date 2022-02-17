@@ -44,7 +44,7 @@ func TestDegreesFromRadians(t *testing.T) {
 	testDegreesFromRadiansGeneral(t, 0, 0)
 	testDegreesFromRadiansGeneral(t, 90, math.Pi/2)
 	testDegreesFromRadiansGeneral(t, 180, math.Pi)
-	testDegreesFromRadiansGeneral(t, 360, 2*math.Pi)
+	testDegreesFromRadiansGeneral(t, 0, 2*math.Pi)
 }
 
 func testNormalizeDegreesGeneral(t *testing.T, in, out float64) {
