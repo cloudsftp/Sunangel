@@ -10,7 +10,7 @@ import (
 
 func TestSunsetEstimator(t *testing.T) {
 	got := sunset.EstimateSunsetOf(dateCustom, locationGaensberg)
-	want := time.Date(2022, time.February, 11, 17, 30, 25, 0, time.UTC)
+	want := time.Date(2022, time.February, 11, 17, 30, 47, 0, time.UTC)
 
 	fmt.Println(got)
 

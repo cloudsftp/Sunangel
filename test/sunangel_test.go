@@ -9,7 +9,7 @@ import (
 
 func TestAltitudeSunangleAt(t *testing.T) {
 	got := sunangel.AltitudeSunAngleAt(dateWiki, locationMuenchen)
-	want := angle.RadiansFromDegrees(19.062)
+	want := angle.RadiansFromDegrees(19.110)
 
 	assertApproxEqual(t, got, want)
 }
@@ -23,7 +23,7 @@ func TestAzimutSunAngleAt(t *testing.T) {
 
 func TestAltitudeSunangleAtCustom(t *testing.T) {
 	got := sunangel.AltitudeSunAngleAt(dateCustom, locationGaensberg)
-	want := float64(0.00069)
+	want := float64(0.00902)
 
 	assertApproxEqual(t, got, want)
 }
