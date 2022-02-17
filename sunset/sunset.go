@@ -46,5 +46,7 @@ func simpleBinarySunsetSearch(lowerBound, upperBound time.Time, place location.L
 		}
 	}
 
-	return lowerBound
+	result := lowerBound
+	result = result.Round(limitSearchDuration)
+	return result
 }
