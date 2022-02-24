@@ -15,7 +15,7 @@ func testRadiansFromDegreesGeneral(t *testing.T, degrees, radians float64) {
 func TestRadiansFromDegrees(t *testing.T) {
 	testRadiansFromDegreesGeneral(t, 0, 0)
 	testRadiansFromDegreesGeneral(t, 90, math.Pi/2)
-	testRadiansFromDegreesGeneral(t, 180, -math.Pi)
+	testRadiansFromDegreesGeneral(t, 180, math.Pi)
 	testRadiansFromDegreesGeneral(t, 360, 0)
 }
 
@@ -28,8 +28,8 @@ func TestNormalizeRadians(t *testing.T) {
 	testNormalizeRadiansGeneral(t, 0, 0)
 
 	testNormalizeRadiansGeneral(t, 4.5*math.Pi, math.Pi/2)
-	testNormalizeRadiansGeneral(t, 3*math.Pi, -math.Pi)
-	testNormalizeRadiansGeneral(t, 111*math.Pi, -math.Pi)
+	testNormalizeRadiansGeneral(t, 3*math.Pi, math.Pi)
+	testNormalizeRadiansGeneral(t, 111*math.Pi, math.Pi)
 	testNormalizeRadiansGeneral(t, 1e3*math.Pi, 0) // limit of this implementation
 
 	testNormalizeRadiansGeneral(t, -2*math.Pi, 0)

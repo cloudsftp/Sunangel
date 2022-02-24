@@ -16,6 +16,7 @@ var (
 	locationGaensberg = *location.NewLocation(48.8187132, 9.5878127)
 
 	locationTurbinesWTB = *location.NewLocation(48.7866067, 9.4424222)
+	locationLinsenberg  = *location.NewLocation(48.819, 9.557)
 )
 
 func assertApproxEqualEpsilon(t *testing.T, got, want, epsilon float64) {
