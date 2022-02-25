@@ -13,7 +13,10 @@ const (
 
 func (loc *Location) ComputeHorizon() {
 	log.Printf("Computing horizon for location %f, %f\n", loc.Latitude, loc.Longitude)
-	loc.Horizon = [horizonAngleResolution]float64{-math.Pi}
+	loc.Horizon = [horizonAngleResolution]float64{}
+	for i := 0; i < len(loc.Horizon); i++ {
+		loc.Horizon[i] = -math.Pi
+	}
 
 	for k := 1; k <= numSteps; k++ {
 		if k%100 == 0 {
@@ -22,10 +25,8 @@ func (loc *Location) ComputeHorizon() {
 
 		azimutAnglesMeasured, horizonAnglesMeasured := loc.measureHorizonAngles(k)
 
-		azimutAnglesMeasured = azimutAnglesMeasured
-		horizonAnglesMeasured = horizonAnglesMeasured
-
-		// TODO: interpolate to max{2 * 2^k, resolution} angles
+		currhorizonAngleResolution := int(math.Min(math.Pow(2, float64(k)), float64(horizonAngleResolution)))
+		loc.interpolateHorizonAnglesFromSamples(azimutAnglesMeasured, horizonAnglesMeasured, currhorizonAngleResolution)
 	}
 }
 
@@ -80,4 +81,40 @@ func (loc Location) computeOffsetLocation(stepsNorth, stepsEast int) Location {
 	offsetLocation.Longitude = loc.Longitude + float64(stepsEast)*stepSize
 
 	return offsetLocation
+}
+
+func (loc *Location) interpolateHorizonAnglesFromSamples(azimutAngles, horizonAngles []float64, resolution int) {
+	sampleIndex := 0
+	skips := horizonAngleResolution / resolution // resolution always power of 2 and < horizonAngleResolution
+
+	for i := 0; i < resolution; i++ {
+		targetAzimutAngle := float64(i*2) * math.Pi / float64(resolution)
+
+		for ; sampleIndex < len(azimutAngles); sampleIndex++ {
+			if azimutAngles[sampleIndex] > targetAzimutAngle {
+				sampleIndex--
+				break
+			}
+		}
+		if sampleIndex >= len(azimutAngles) {
+			sampleIndex = len(azimutAngles) - 1
+		}
+
+		leftAzimutAngle := azimutAngles[sampleIndex]
+		leftHorizonAngle := horizonAngles[sampleIndex]
+
+		rightIndex := sampleIndex + 1
+		if rightIndex >= len(azimutAngles) {
+			rightIndex = 0
+		}
+		rightAzimutAngle := azimutAngles[rightIndex]
+		rightHorizonAngle := horizonAngles[rightIndex]
+
+		horizonAngle := (targetAzimutAngle - leftAzimutAngle) * (rightHorizonAngle - leftHorizonAngle) / (rightAzimutAngle - leftAzimutAngle)
+		horizonAngle += leftHorizonAngle
+
+		if horizonAngle > loc.Horizon[i*skips] {
+			loc.Horizon[i*skips] = horizonAngle
+		}
+	}
 }

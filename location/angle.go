@@ -1,6 +1,10 @@
 package location
 
-import "math"
+import (
+	"math"
+
+	"github.com/cloudsftp/Sunangel/angle"
+)
 
 const circumferenceEarthMeters float64 = 6371e3
 
@@ -30,5 +34,7 @@ func (src Location) azimutAngleTo(tgt Location) float64 {
 	x := math.Cos(src.Latitude) * math.Sin(tgt.Latitude)
 	x -= math.Sin(src.Latitude) * math.Cos(tgt.Latitude) * math.Cos(dlong)
 
-	return math.Atan2(y, x)
+	azimutAngle := math.Atan2(y, x)
+	azimutAngle = angle.NormalizeRadians(azimutAngle)
+	return azimutAngle
 }
