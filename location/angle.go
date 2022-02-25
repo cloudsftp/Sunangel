@@ -24,7 +24,9 @@ func (src Location) HorizontalAngleTo(tgt Location) float64 {
 	d := d1 + d2
 
 	gamma := math.Atan2(h, d)
-	return gamma - (theta / 2)
+	gamma = gamma - (theta / 2)
+	gamma = angle.NormalizeRadiansLatitude(gamma)
+	return gamma
 }
 
 func (src Location) azimutAngleTo(tgt Location) float64 {

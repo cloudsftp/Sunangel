@@ -25,8 +25,11 @@ func (loc *Location) ComputeHorizon() {
 
 		azimutAnglesMeasured, horizonAnglesMeasured := loc.measureHorizonAngles(k)
 
-		currhorizonAngleResolution := int(math.Min(math.Pow(2, float64(k)), float64(horizonAngleResolution)))
-		loc.interpolateHorizonAnglesFromSamples(azimutAnglesMeasured, horizonAnglesMeasured, currhorizonAngleResolution)
+		currHorizonAngleResolution := int(math.Min(math.Pow(2, float64(k)), float64(horizonAngleResolution)))
+		loc.interpolateHorizonAnglesFromSamples(azimutAnglesMeasured, horizonAnglesMeasured, currHorizonAngleResolution)
+		if currHorizonAngleResolution < horizonAngleResolution {
+			loc.interpolateHorizonAnglesFromHorizonAngles(currHorizonAngleResolution)
+		}
 	}
 }
 
@@ -103,10 +106,7 @@ func (loc *Location) interpolateHorizonAnglesFromSamples(azimutAngles, horizonAn
 		leftAzimutAngle := azimutAngles[sampleIndex]
 		leftHorizonAngle := horizonAngles[sampleIndex]
 
-		rightIndex := sampleIndex + 1
-		if rightIndex >= len(azimutAngles) {
-			rightIndex = 0
-		}
+		rightIndex := (sampleIndex + 1) % len(azimutAngles)
 		rightAzimutAngle := azimutAngles[rightIndex]
 		rightHorizonAngle := horizonAngles[rightIndex]
 
@@ -115,6 +115,26 @@ func (loc *Location) interpolateHorizonAnglesFromSamples(azimutAngles, horizonAn
 
 		if horizonAngle > loc.Horizon[i*skips] {
 			loc.Horizon[i*skips] = horizonAngle
+		}
+	}
+}
+
+func (loc *Location) interpolateHorizonAnglesFromHorizonAngles(resolution int) {
+	skipsInterpolated := horizonAngleResolution / resolution // resolution always power of 2 and < horizonAngleResolution
+	offsetNotInterpolated := skipsInterpolated / 2
+
+	for i := 0; i < resolution; i++ {
+		leftIndex := i * skipsInterpolated
+		rightIndex := (leftIndex + skipsInterpolated) % len(loc.Horizon)
+		tgtIndex := leftIndex + offsetNotInterpolated
+
+		leftHorizonAngle := loc.Horizon[leftIndex]
+		rightHorizonAngle := loc.Horizon[rightIndex]
+
+		horizonAngle := float64(0.5) * (rightHorizonAngle - leftHorizonAngle)
+
+		if horizonAngle > loc.Horizon[tgtIndex] {
+			loc.Horizon[tgtIndex] = horizonAngle
 		}
 	}
 }
