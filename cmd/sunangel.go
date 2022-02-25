@@ -19,4 +19,6 @@ func main() {
 
 	fmt.Println("\nMISC")
 	fmt.Println(angle.DegreesFromRadians(sunangel.AzimutSunAngleAt(date, locationGaensberg)))
+
+	locationGaensberg.ComputeHorizon()
 }

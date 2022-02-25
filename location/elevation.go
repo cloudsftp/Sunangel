@@ -25,14 +25,15 @@ func initSrtm() {
 }
 
 // GetElevation returns the elevation of the given location
-func (a Location) GetElevation() float64 {
+func (loc Location) GetElevation() float64 {
 	if !srtmInitialized {
 		initSrtm()
 	}
 
-	ele, err := srtm.GetElevation(http.DefaultClient, a.Latitude, a.Longitude)
+	ele, err := srtm.GetElevation(http.DefaultClient, loc.Latitude, loc.Longitude)
 	if err != nil {
 		panic(err)
 	}
+
 	return float64(ele)
 }

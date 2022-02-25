@@ -19,7 +19,7 @@ func TestElevation(t *testing.T) {
 }
 
 func testAngleToGeneral(t *testing.T, a, b location.Location, want float64) {
-	got := a.AngleTo(b)
+	got := a.HorizontalAngleTo(b)
 
 	assertPreciselyEqual(t, got, want)
 }
