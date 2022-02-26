@@ -22,10 +22,6 @@ func (loc *Location) computeHorizon() {
 	}
 
 	for k := 1; k <= numSteps; k++ {
-		if k%100 == 0 {
-			log.Printf("Current sample distance from location: %d\n", k)
-		}
-
 		azimutAnglesMeasured, horizonAnglesMeasured := loc.measureHorizonAngles(k)
 
 		currHorizonAngleResolution := int(math.Min(math.Pow(2, float64(k)), float64(horizonAngleResolution)))

@@ -18,35 +18,30 @@ func EstimateSunsetOf(date time.Time, place location.Location) time.Time {
 	lowerBound := time.Date(year, month, day, 12, 0, 0, 0, loc)
 	upperBound := time.Date(year, month, day, 23, 59, 59, 1e9-1, loc)
 
-	return simpleBinarySunsetSearch(lowerBound, upperBound, place)
+	return binarySunsetSearch(lowerBound, upperBound, place)
 }
 
-func simpleBinarySunsetSearch(lowerBound, upperBound time.Time, place location.Location) time.Time {
-	done := false
-	sunAngleGoal := float64(0)
-
+func binarySunsetSearch(lowerBound, upperBound time.Time, place location.Location) time.Time {
 	limitSearchDuration := time.Duration(1e9)
 
-	var newBound time.Time
-	var currentSearchDuration time.Duration
-	var sunAngleNewBound float64
-	for !done {
-		currentSearchDuration = upperBound.Sub(lowerBound)
-		if currentSearchDuration/2 < limitSearchDuration {
-			done = true
-		}
+	for {
+		currentSearchDuration := upperBound.Sub(lowerBound)
+		newBound := lowerBound.Add(currentSearchDuration / 2)
 
-		newBound = lowerBound.Add(currentSearchDuration / 2)
+		azimutAngle := sunangel.AzimutSunAngleAt(newBound, place)
+		horizonAngle := sunangel.AltitudeSunAngleAt(newBound, place)
 
-		sunAngleNewBound = sunangel.AltitudeSunAngleAt(newBound, place)
-		if sunAngleNewBound < sunAngleGoal {
+		horizonAngleGoal := place.GetHorizonAngleAt(azimutAngle)
+		if horizonAngle < horizonAngleGoal {
 			upperBound = newBound
 		} else {
 			lowerBound = newBound
 		}
+
+		if currentSearchDuration < limitSearchDuration {
+			break
+		}
 	}
 
-	result := lowerBound
-	result = result.Round(limitSearchDuration)
-	return result
+	return lowerBound.Round(limitSearchDuration)
 }
