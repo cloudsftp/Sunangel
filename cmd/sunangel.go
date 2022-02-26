@@ -11,15 +11,18 @@ import (
 )
 
 func main() {
-	fmt.Println("Sunset today at Gaensberg w/o horizon calc")
 	date := time.Now()
-	locationGaensberg := *location.NewLocation(48.8187132, 9.5878127)
-	estimatedSunsetTime := sunset.EstimateSunsetOf(date, locationGaensberg)
+	// loc := *location.NewLocation(48.8187132, 9.5878127) //Gaensberg
+	loc := *location.NewLocation(48.8230357, 9.5823731) // Burg
+
+	estimatedSunsetTime := sunset.EstimateSunsetOf(date, loc)
 	fmt.Println(estimatedSunsetTime)
 
 	fmt.Println("\nMISC")
-	fmt.Println(angle.DegreesFromRadians(sunangel.AzimutSunAngleAt(date, locationGaensberg)))
+	fmt.Println(angle.DegreesFromRadians(sunangel.AzimutSunAngleAt(date, loc)))
 
-	locationGaensberg.ComputeHorizon()
-	fmt.Print(locationGaensberg.Horizon)
+	fmt.Print(loc.Horizon)
+	for i := 0; i < len(loc.Horizon); i++ {
+		fmt.Printf("index %4d, angle %f\n", i, angle.DegreesFromRadians(loc.Horizon[i]))
+	}
 }

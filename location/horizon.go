@@ -3,15 +3,18 @@ package location
 import (
 	"log"
 	"math"
+
+	"github.com/cloudsftp/Sunangel/util"
 )
 
 const (
 	stepSize               float64 = 0.0003
 	numSteps               int     = 2 << 11 // 2048
 	horizonAngleResolution int     = 1 << 10 // 1024
+	horizonAngleWidth      float64 = 2 * math.Pi / float64(horizonAngleResolution)
 )
 
-func (loc *Location) ComputeHorizon() {
+func (loc *Location) computeHorizon() {
 	log.Printf("Computing horizon for location %f, %f\n", loc.Latitude, loc.Longitude)
 	loc.Horizon = [horizonAngleResolution]float64{}
 	for i := 0; i < len(loc.Horizon); i++ {
@@ -110,9 +113,7 @@ func (loc *Location) interpolateHorizonAnglesFromSamples(azimutAngles, horizonAn
 		rightAzimutAngle := azimutAngles[rightIndex]
 		rightHorizonAngle := horizonAngles[rightIndex]
 
-		horizonAngle := (targetAzimutAngle - leftAzimutAngle) * (rightHorizonAngle - leftHorizonAngle) / (rightAzimutAngle - leftAzimutAngle)
-		horizonAngle += leftHorizonAngle
-
+		horizonAngle := util.LinInt(targetAzimutAngle, leftAzimutAngle, leftHorizonAngle, rightAzimutAngle, rightHorizonAngle)
 		if horizonAngle > loc.Horizon[i*skips] {
 			loc.Horizon[i*skips] = horizonAngle
 		}
@@ -131,10 +132,24 @@ func (loc *Location) interpolateHorizonAnglesFromHorizonAngles(resolution int) {
 		leftHorizonAngle := loc.Horizon[leftIndex]
 		rightHorizonAngle := loc.Horizon[rightIndex]
 
-		horizonAngle := float64(0.5) * (rightHorizonAngle - leftHorizonAngle)
+		horizonAngle := (rightHorizonAngle - leftHorizonAngle) / 2
+		horizonAngle += leftHorizonAngle
 
 		if horizonAngle > loc.Horizon[tgtIndex] {
 			loc.Horizon[tgtIndex] = horizonAngle
 		}
 	}
+}
+
+func (loc Location) GetHorizonAngleAt(tgtAzimutAngle float64) float64 {
+	leftIndex := int(tgtAzimutAngle / horizonAngleWidth)
+	rightIndex := (leftIndex + 1) % horizonAngleResolution
+
+	leftAzimutAngle := float64(leftIndex) * horizonAngleWidth
+	rightAzimutAngle := float64(rightIndex) * horizonAngleWidth
+
+	leftHorizonAngle := loc.Horizon[leftIndex]
+	rightHorizonAngle := loc.Horizon[rightIndex]
+
+	return util.LinInt(tgtAzimutAngle, leftAzimutAngle, leftHorizonAngle, rightAzimutAngle, rightHorizonAngle)
 }

@@ -8,6 +8,6 @@ type Location struct {
 
 func NewLocation(latitude, longitude float64) *Location {
 	l := Location{Latitude: latitude, Longitude: longitude}
-	//l.computeHorizon()
+	l.computeHorizon()
 	return &l
 }
