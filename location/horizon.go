@@ -16,7 +16,7 @@ const (
 
 func (loc *Location) computeHorizon() {
 	log.Printf("Computing horizon for location %f, %f\n", loc.Latitude, loc.Longitude)
-	loc.Horizon = [horizonAngleResolution]float64{}
+	loc.Horizon = horizonArray{}
 	for i := 0; i < len(loc.Horizon); i++ {
 		loc.Horizon[i] = -math.Pi
 	}

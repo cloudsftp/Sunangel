@@ -11,59 +11,106 @@ import (
 
 const bytesIn64Bits int = 8
 
+var (
+	dbInitialized bool = false
+	db            *badger.DB
+)
+
 func (place *Location) LoadHorizonOfLocation() {
-	db, err := badger.Open(badger.DefaultOptions("/tmp/badger"))
-	if err != nil {
-		panic(err)
+	ok := place.tryLoadHorizon()
+
+	if !ok {
+		log.Printf("Could not find horizon for location in DB for %s", string(place.getHorizonStoreKey()))
+		place.computeHorizon()
+		place.storeHorizon()
 	}
-	defer db.Close()
+}
 
-	key := []byte(fmt.Sprintf("%02.4f,%02.4f", place.Latitude, place.Longitude))
+func (place *Location) RecomputeHorizon() {
+	place.computeHorizon()
 
-	err = db.View(func(txn *badger.Txn) error {
-		item, rerr := txn.Get(key)
+	place.storeHorizon()
+}
+
+func (place Location) getHorizonStoreKey() []byte {
+	key := fmt.Sprintf("%02.4f,%02.4f", place.Latitude, place.Longitude)
+	return []byte(key)
+}
+
+func initializeDatabase() {
+	if !dbInitialized {
+		var err error
+		db, err = badger.Open(badger.DefaultOptions("/tmp/badger"))
+		if err != nil {
+			panic(err)
+		}
+
+		dbInitialized = true
+	}
+
+}
+
+func (place *Location) tryLoadHorizon() bool {
+	initializeDatabase()
+
+	err := db.View(func(txn *badger.Txn) error {
+		item, rerr := txn.Get(place.getHorizonStoreKey())
 		if rerr != nil {
 			return rerr
 		}
 
-		log.Printf("Found horizon for location in DB for %s", string(key))
+		log.Printf("Found horizon for location in DB for %s", string(place.getHorizonStoreKey()))
 
 		item.Value(func(val []byte) error {
-			for i := 0; i < horizonAngleResolution; i++ {
-				position := i * bytesIn64Bits
-				var bytes = make([]byte, bytesIn64Bits)
-				for j := 0; j < bytesIn64Bits; j++ {
-					bytes[j] = val[position+j]
-				}
-				place.Horizon[i] = math.Float64frombits(binary.LittleEndian.Uint64(bytes))
-			}
-
+			place.Horizon = horizonArrayFromBytes(val)
 			return nil
 		})
 		return nil
 	})
 
+	return err == nil
+}
+
+func (place Location) storeHorizon() {
+	initializeDatabase()
+
+	err := db.Update(func(txn *badger.Txn) error {
+		return txn.Set(place.getHorizonStoreKey(), bytesFromHorizonArray(place.Horizon))
+	})
+
 	if err != nil {
-		log.Printf("Could not find horizon for location in DB for %s", string(key))
+		panic(err)
+	}
+}
 
-		place.computeHorizon()
+func bytesFromHorizonArray(horizon horizonArray) []byte {
+	val := make([]byte, horizonAngleResolution*bytesIn64Bits)
 
-		err = db.Update(func(txn *badger.Txn) error {
-			val := make([]byte, horizonAngleResolution*bytesIn64Bits)
-			for i := 0; i < horizonAngleResolution; i++ {
-				position := i * bytesIn64Bits
-				bytes := make([]byte, bytesIn64Bits)
-				binary.LittleEndian.PutUint64(bytes, math.Float64bits(place.Horizon[i]))
-				for j := 0; j < bytesIn64Bits; j++ {
-					val[position+j] = bytes[j]
-				}
-			}
-			err = txn.Set(key, val)
-			return err
-		})
+	for i := 0; i < horizonAngleResolution; i++ {
+		position := i * bytesIn64Bits
+		bytes := make([]byte, bytesIn64Bits)
+		binary.LittleEndian.PutUint64(bytes, math.Float64bits(horizon[i]))
 
-		if err != nil {
-			panic(err)
+		for j := 0; j < bytesIn64Bits; j++ {
+			val[position+j] = bytes[j]
 		}
 	}
+
+	return val
+}
+
+func horizonArrayFromBytes(val []byte) horizonArray {
+	horizon := horizonArray{}
+
+	for i := 0; i < horizonAngleResolution; i++ {
+		var bytes = make([]byte, bytesIn64Bits)
+
+		position := i * bytesIn64Bits
+		for j := 0; j < bytesIn64Bits; j++ {
+			bytes[j] = val[position+j]
+		}
+		horizon[i] = math.Float64frombits(binary.LittleEndian.Uint64(bytes))
+	}
+
+	return horizon
 }

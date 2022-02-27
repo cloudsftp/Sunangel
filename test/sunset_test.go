@@ -36,6 +36,7 @@ func testSunsetEstimatorGeneral(t *testing.T, wantString string, place location.
 // These tests depend on the horizon
 func TestSunsetEstimatorFreibad(t *testing.T) {
 	place := *location.NewLocation(48.8292463, 9.5773359)
+	place.RecomputeHorizon()
 
 	testSunsetEstimatorGeneral(t, "2022-02-27 17:55:00", place)
 }
