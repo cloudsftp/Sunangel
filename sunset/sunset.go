@@ -22,6 +22,8 @@ func EstimateSunsetOf(date time.Time, place location.Location) time.Time {
 }
 
 func binarySunsetSearch(lowerBound, upperBound time.Time, place location.Location) time.Time {
+	place.LoadHorizonOfLocation()
+
 	limitSearchDuration := time.Duration(1e9)
 
 	for {

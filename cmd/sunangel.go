@@ -29,5 +29,5 @@ func main() {
 		fmt.Print(loc.Horizon)
 		for i := 0; i < len(loc.Horizon); i++ {
 			fmt.Printf("index %4d, angle %f\n", i, angle.DegreesFromRadians(loc.Horizon[i]))
-		} */
+		}*/
 }

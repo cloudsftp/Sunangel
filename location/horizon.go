@@ -21,13 +21,13 @@ func (loc *Location) computeHorizon() {
 		loc.Horizon[i] = -math.Pi
 	}
 
-	for k := 1; k <= numSteps; k++ {
+	for k := 1 << 8; k <= numSteps; k++ {
 		azimutAnglesMeasured, horizonAnglesMeasured := loc.measureHorizonAngles(k)
 
 		currHorizonAngleResolution := int(math.Min(math.Pow(2, float64(k)), float64(horizonAngleResolution)))
 		loc.interpolateHorizonAnglesFromSamples(azimutAnglesMeasured, horizonAnglesMeasured, currHorizonAngleResolution)
 		if currHorizonAngleResolution < horizonAngleResolution {
-			loc.interpolateHorizonAnglesFromHorizonAngles(currHorizonAngleResolution)
+			//loc.interpolateHorizonAnglesFromHorizonAngles(currHorizonAngleResolution)
 		}
 	}
 }
