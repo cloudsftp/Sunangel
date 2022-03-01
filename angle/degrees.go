@@ -23,3 +23,13 @@ func NormalizeDegrees(degrees float64) float64 {
 	}
 	return degrees
 }
+
+// NormalizeDegrees resturns the normalized angle in degrees.
+// It will be in the range [-180, 180)
+func NormalizeDegreesLatitude(degrees float64) float64 {
+	degrees = NormalizeDegrees(degrees)
+	if degrees >= degreesPerRotation/2 {
+		degrees -= degreesPerRotation
+	}
+	return degrees
+}

@@ -26,6 +26,7 @@ func AltitudeSunAngleAt(date time.Time, place *location.Location) float64 {
 func correctedSunAngleAt(date time.Time, place *location.Location) float64 {
 	h := uncorrectedSunAngleAt(date, place)
 	hd := angle.DegreesFromRadians(h)
+	hd = angle.NormalizeDegreesLatitude(hd)
 
 	argumentd := hd + refractionC1/(hd+refractionC2)
 	argument := angle.RadiansFromDegrees(argumentd)
