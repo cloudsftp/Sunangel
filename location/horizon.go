@@ -21,13 +21,13 @@ func (loc *Location) computeHorizon() {
 		loc.Horizon[i] = -math.Pi
 	}
 
-	for k := 1 << 8; k <= numSteps; k++ {
+	for k := 1; k <= numSteps; k++ {
 		azimutAnglesMeasured, horizonAnglesMeasured := loc.measureHorizonAngles(k)
 
-		currHorizonAngleResolution := int(math.Min(math.Pow(2, float64(k)), float64(horizonAngleResolution)))
+		currHorizonAngleResolution := computeSampleResolution(len(horizonAnglesMeasured))
 		loc.interpolateHorizonAnglesFromSamples(azimutAnglesMeasured, horizonAnglesMeasured, currHorizonAngleResolution)
 		if currHorizonAngleResolution < horizonAngleResolution {
-			//loc.interpolateHorizonAnglesFromHorizonAngles(currHorizonAngleResolution)
+			loc.interpolateHorizonAnglesFromHorizonAngles(currHorizonAngleResolution)
 		}
 	}
 }
@@ -56,13 +56,13 @@ func (loc Location) computeSkips(distance int) int {
 	// Check what size of skips produces acceptable angle changes
 	indexDiagonal := int(distance / 2)
 	locationDiagonal := loc.computeOffsetLocation(distance-indexDiagonal, indexDiagonal)
-	angleDiagonal := loc.azimutAngleTo(locationDiagonal)
+	angleDiagonal := loc.AzimutAngleTo(locationDiagonal)
 
 	skips := 1
 	fineGranularEnough := true
 	for ; fineGranularEnough; skips++ {
 		locationSkip := loc.computeOffsetLocation(distance-indexDiagonal-skips, indexDiagonal+skips)
-		angleSkip := loc.azimutAngleTo(locationSkip)
+		angleSkip := loc.AzimutAngleTo(locationSkip)
 
 		fineGranularEnough = math.Abs(angleSkip-angleDiagonal) < 2*math.Pi/float64(horizonAngleResolution)
 	}
@@ -70,19 +70,24 @@ func (loc Location) computeSkips(distance int) int {
 	return skips - 1
 }
 
+func computeSampleResolution(measurementResolution int) int {
+	sampleResolution := math.Pow(2, math.Floor(math.Log2(float64(measurementResolution))))
+	return int(math.Min(sampleResolution, float64(horizonAngleResolution)))
+}
+
 func (loc Location) measureHorizonAngle(stepsNorth, stepsEast, index int, azimutAngles, horizonAngles []float64) {
 	sampleLocation := loc.computeOffsetLocation(stepsNorth, stepsEast)
 
-	azimutAngles[index] = loc.azimutAngleTo(sampleLocation)
+	azimutAngles[index] = loc.AzimutAngleTo(sampleLocation)
 	horizonAngles[index] = loc.HorizontalAngleTo(sampleLocation)
 }
 
-func (loc Location) computeOffsetLocation(stepsNorth, stepsEast int) Location {
+func (loc Location) computeOffsetLocation(stepsNorth, stepsEast int) *Location {
 	offsetLocation := Location{}
 	offsetLocation.Latitude = loc.Latitude + float64(stepsNorth)*stepSize
 	offsetLocation.Longitude = loc.Longitude + float64(stepsEast)*stepSize
 
-	return offsetLocation
+	return &offsetLocation
 }
 
 func (loc *Location) interpolateHorizonAnglesFromSamples(azimutAngles, horizonAngles []float64, resolution int) {
@@ -128,9 +133,7 @@ func (loc *Location) interpolateHorizonAnglesFromHorizonAngles(resolution int) {
 		leftHorizonAngle := loc.Horizon[leftIndex]
 		rightHorizonAngle := loc.Horizon[rightIndex]
 
-		horizonAngle := (rightHorizonAngle - leftHorizonAngle) / 2
-		horizonAngle += leftHorizonAngle
-
+		horizonAngle := util.LinInt(1, 0, leftHorizonAngle, 2, rightHorizonAngle)
 		if horizonAngle > loc.Horizon[tgtIndex] {
 			loc.Horizon[tgtIndex] = horizonAngle
 		}

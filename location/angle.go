@@ -8,7 +8,7 @@ import (
 
 const circumferenceEarthMeters float64 = 6371e3
 
-func (src Location) HorizontalAngleTo(tgt Location) float64 {
+func (src Location) HorizontalAngleTo(tgt *Location) float64 {
 	theta := src.angleAtCenterOfEarth(tgt)
 
 	heightA := src.GetElevation()
@@ -29,12 +29,17 @@ func (src Location) HorizontalAngleTo(tgt Location) float64 {
 	return gamma
 }
 
-func (src Location) azimutAngleTo(tgt Location) float64 {
-	dlong := tgt.Longitude - src.Longitude
+func (src Location) AzimutAngleTo(tgt *Location) float64 {
+	srcLat := angle.RadiansFromDegrees(src.Latitude)
+	tgtLat := angle.RadiansFromDegrees(tgt.Latitude)
+	srcLong := angle.RadiansFromDegrees(src.Longitude)
+	tgtLong := angle.RadiansFromDegrees(tgt.Longitude)
 
-	y := math.Sin(dlong) * math.Cos(tgt.Latitude)
-	x := math.Cos(src.Latitude) * math.Sin(tgt.Latitude)
-	x -= math.Sin(src.Latitude) * math.Cos(tgt.Latitude) * math.Cos(dlong)
+	dlong := tgtLong - srcLong
+
+	y := math.Sin(dlong) * math.Cos(tgtLat)
+	x := math.Cos(srcLat) * math.Sin(tgtLat)
+	x -= math.Sin(srcLat) * math.Cos(tgtLat) * math.Cos(dlong)
 
 	azimutAngle := math.Atan2(y, x)
 	azimutAngle = angle.NormalizeRadians(azimutAngle)

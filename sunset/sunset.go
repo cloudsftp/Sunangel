@@ -1,6 +1,7 @@
 package sunset
 
 import (
+	"log"
 	"time"
 
 	"github.com/cloudsftp/Sunangel/location"
@@ -9,7 +10,7 @@ import (
 
 // EstimateSunsetOf returns an estimate of the time of sunset
 // at a given time and place.
-func EstimateSunsetOf(date time.Time, place location.Location) time.Time {
+func EstimateSunsetOf(date time.Time, place *location.Location) time.Time {
 	year := date.Year()
 	month := date.Month()
 	day := date.Day()
@@ -21,7 +22,7 @@ func EstimateSunsetOf(date time.Time, place location.Location) time.Time {
 	return binarySunsetSearch(lowerBound, upperBound, place)
 }
 
-func binarySunsetSearch(lowerBound, upperBound time.Time, place location.Location) time.Time {
+func binarySunsetSearch(lowerBound, upperBound time.Time, place *location.Location) time.Time {
 	place.LoadHorizonOfLocation()
 
 	limitSearchDuration := time.Duration(1e9)
@@ -30,10 +31,15 @@ func binarySunsetSearch(lowerBound, upperBound time.Time, place location.Locatio
 		currentSearchDuration := upperBound.Sub(lowerBound)
 		newBound := lowerBound.Add(currentSearchDuration / 2)
 
+		log.Print(newBound)
+
 		azimutAngle := sunangel.AzimutSunAngleAt(newBound, place)
 		horizonAngle := sunangel.AltitudeSunAngleAt(newBound, place)
 
 		horizonAngleGoal := place.GetHorizonAngleAt(azimutAngle)
+
+		log.Printf("got %f want %f", horizonAngle, horizonAngleGoal)
+
 		if horizonAngle < horizonAngleGoal {
 			upperBound = newBound
 		} else {

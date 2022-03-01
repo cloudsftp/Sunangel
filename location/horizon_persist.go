@@ -19,10 +19,11 @@ var (
 func (place *Location) LoadHorizonOfLocation() {
 	ok := place.tryLoadHorizon()
 
-	if !ok {
+	if ok {
+		log.Printf("Found horizon for location in DB for %s", string(place.getHorizonStoreKey()))
+	} else {
 		log.Printf("Could not find horizon for location in DB for %s", string(place.getHorizonStoreKey()))
-		place.computeHorizon()
-		place.storeHorizon()
+		place.RecomputeHorizon()
 	}
 }
 
@@ -58,8 +59,6 @@ func (place *Location) tryLoadHorizon() bool {
 		if rerr != nil {
 			return rerr
 		}
-
-		log.Printf("Found horizon for location in DB for %s", string(place.getHorizonStoreKey()))
 
 		item.Value(func(val []byte) error {
 			place.Horizon = horizonArrayFromBytes(val)

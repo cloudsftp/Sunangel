@@ -22,7 +22,7 @@ func assertDatePreciselyEqual(t *testing.T, got, want time.Time) {
 	}
 }
 
-func testSunsetEstimatorGeneral(t *testing.T, wantString string, place location.Location) {
+func testSunsetEstimatorGeneral(t *testing.T, wantString string, place *location.Location) {
 	want, err := time.ParseInLocation(timeLayout, wantString, berlinTiomezone)
 	if err != nil {
 		t.Errorf("could not parse date '%s'", wantString)
@@ -35,8 +35,8 @@ func testSunsetEstimatorGeneral(t *testing.T, wantString string, place location.
 
 // These tests depend on the horizon
 func TestSunsetEstimatorFreibad(t *testing.T) {
-	place := *location.NewLocation(48.8292463, 9.5773359)
-	place.RecomputeHorizon()
+	place := location.NewLocation(48.8292463, 9.5773359)
+	//place.RecomputeHorizon()
 
 	testSunsetEstimatorGeneral(t, "2022-02-27 17:55:00", place)
 }
@@ -44,5 +44,6 @@ func TestSunsetEstimatorFreibad(t *testing.T) {
 // These tests don't depend on the horizon
 
 func TestSunsetEstimatorGaensberg(t *testing.T) {
+	locationGaensberg.RecomputeHorizon()
 	testSunsetEstimatorGeneral(t, "2022-02-11 17:30:41", locationGaensberg)
 }
