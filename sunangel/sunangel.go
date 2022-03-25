@@ -18,6 +18,7 @@ const (
 // AltitudeSunAngleAt returns the altitude of the sun at a given time and place.
 // The latitude is the vertical angle between the sun and the horizon.
 func AltitudeSunAngleAt(date time.Time, place *location.Location) float64 {
+	// altitudeAngle := uncorrectedSunAngleAt(date, place)
 	altitudeAngle := correctedSunAngleAt(date, place)
 	altitudeAngle = angle.NormalizeRadiansLatitude(altitudeAngle)
 	return altitudeAngle
@@ -27,6 +28,11 @@ func correctedSunAngleAt(date time.Time, place *location.Location) float64 {
 	h := uncorrectedSunAngleAt(date, place)
 	hd := angle.DegreesFromRadians(h)
 	hd = angle.NormalizeDegreesLatitude(hd)
+
+	epsilon := 0.2
+	if math.Abs(hd+refractionC2) < epsilon {
+		return h
+	}
 
 	argumentd := hd + refractionC1/(hd+refractionC2)
 	argument := angle.RadiansFromDegrees(argumentd)

@@ -31,14 +31,10 @@ func binarySunsetSearch(lowerBound, upperBound time.Time, place *location.Locati
 		currentSearchDuration := upperBound.Sub(lowerBound)
 		newBound := lowerBound.Add(currentSearchDuration / 2)
 
-		log.Print(newBound)
-
 		azimutAngle := sunangel.AzimutSunAngleAt(newBound, place)
 		horizonAngle := sunangel.AltitudeSunAngleAt(newBound, place)
 
 		horizonAngleGoal := place.GetHorizonAngleAt(azimutAngle)
-
-		log.Printf("got %f want %f", horizonAngle, horizonAngleGoal)
 
 		if horizonAngle < horizonAngleGoal {
 			upperBound = newBound
@@ -46,10 +42,19 @@ func binarySunsetSearch(lowerBound, upperBound time.Time, place *location.Locati
 			lowerBound = newBound
 		}
 
+		log.Printf(
+			"Searching sunset, current range %s - %s, precision %v",
+			formatBound(lowerBound), formatBound(upperBound), currentSearchDuration,
+		)
+
 		if currentSearchDuration < limitSearchDuration {
 			break
 		}
 	}
 
 	return lowerBound.Round(limitSearchDuration)
+}
+
+func formatBound(date time.Time) string {
+	return date.Format("15:04:05.000")
 }

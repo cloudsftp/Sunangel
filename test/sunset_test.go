@@ -10,7 +10,12 @@ import (
 
 const timeLayout string = "2006-01-02 15:04:05"
 
-var berlinTiomezone = time.FixedZone("Berlin, DE", 3600)
+var (
+	berlinTiomezone = time.FixedZone("Berlin, DE", 3600)
+
+	locationFreibad = location.NewLocation("Freibad", 48.8292463, 9.5773359)
+	locationOWH     = location.NewLocation("OWH", 48.814, 9.59172)
+)
 
 func assertDatePreciselyEqual(t *testing.T, got, want time.Time) {
 	if got.Year() != want.Year() || got.Month() != want.Month() || got.Day() != want.Day() ||
@@ -33,17 +38,17 @@ func testSunsetEstimatorGeneral(t *testing.T, wantString string, place *location
 	assertDatePreciselyEqual(t, got, want)
 }
 
-// These tests depend on the horizon
-func TestSunsetEstimatorFreibad(t *testing.T) {
-	place := location.NewLocation(48.8292463, 9.5773359)
-	place.RecomputeHorizon()
-
-	testSunsetEstimatorGeneral(t, "2022-02-27 17:55:00", place)
+func TestSunsetEstimatorParagleiter(t *testing.T) {
+	locationParagleiter.RecomputeHorizon()
+	testSunsetEstimatorGeneral(t, "2022-03-23 18:34:00", locationParagleiter)
 }
 
-// These tests don't depend on the horizon
+func TestSunsetEstimatorFreibad(t *testing.T) {
+	locationFreibad.RecomputeHorizon()
+	testSunsetEstimatorGeneral(t, "2022-03-22 18:25:29", locationFreibad)
+}
 
-func TestSunsetEstimatorGaensberg(t *testing.T) {
-	locationGaensberg.RecomputeHorizon()
-	testSunsetEstimatorGeneral(t, "2022-02-11 17:30:41", locationGaensberg)
+func TestSunsetEstimatorOWH(t *testing.T) {
+	locationOWH.RecomputeHorizon()
+	testSunsetEstimatorGeneral(t, "2022-03-24 18:34:50", locationOWH)
 }

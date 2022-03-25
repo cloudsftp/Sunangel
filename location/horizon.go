@@ -79,7 +79,7 @@ func (loc Location) measureHorizonAngle(stepsNorth, stepsEast, index int, azimut
 	sampleLocation := loc.computeOffsetLocation(stepsNorth, stepsEast)
 
 	azimutAngles[index] = loc.AzimutAngleTo(sampleLocation)
-	horizonAngles[index] = loc.HorizontalAngleTo(sampleLocation)
+	horizonAngles[index] = loc.AltitudeAngleTo(sampleLocation)
 }
 
 func (loc Location) computeOffsetLocation(stepsNorth, stepsEast int) *Location {
@@ -140,6 +140,8 @@ func (loc *Location) interpolateHorizonAnglesFromHorizonAngles(resolution int) {
 	}
 }
 
+// GetHorizonAngleAt returns the altitude angle of the horizon
+// of a given location at a given azimut angle.
 func (loc Location) GetHorizonAngleAt(tgtAzimutAngle float64) float64 {
 	leftIndex := int(tgtAzimutAngle / horizonAngleWidth)
 	rightIndex := (leftIndex + 1) % horizonAngleResolution

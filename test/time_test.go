@@ -41,12 +41,12 @@ func TestTimeOfDayAsDecimal(t *testing.T) {
 	date = time.Date(0, time.January, 1, 0, 6, 0, 0, time.UTC)
 	testTimeOfDayAsDecimalGeneral(t, date, float64(0.1))
 
-	date = time.Date(0, time.January, 1, 0, 0, 12, 0, time.UTC)
-	testTimeOfDayAsDecimalGeneral(t, date, float64(0.002))
+	date = time.Date(0, time.January, 1, 0, 0, 9, 0, time.UTC)
+	testTimeOfDayAsDecimalGeneral(t, date, float64(0.0025))
 
-	date = time.Date(0, time.January, 1, 0, 0, 0, 1000, time.UTC)
-	testTimeOfDayAsDecimalGeneral(t, date, float64(0.0000000001))
+	date = time.Date(0, time.January, 1, 0, 0, 0, 9000, time.UTC)
+	testTimeOfDayAsDecimalGeneral(t, date, float64(0.0000000025))
 
-	date = time.Date(0, time.January, 1, 16, 18, 24, 1000000, time.UTC)
-	testTimeOfDayAsDecimalGeneral(t, date, float64(16.3040001))
+	date = time.Date(0, time.January, 1, 16, 18, 18, 9000000, time.UTC)
+	testTimeOfDayAsDecimalGeneral(t, date, float64(16.3050025))
 }

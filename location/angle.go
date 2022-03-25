@@ -6,7 +6,24 @@ import (
 	"github.com/cloudsftp/Sunangel/angle"
 )
 
-const circumferenceEarthMeters float64 = 6371e3
+func (src Location) AltitudeAngleTo(tgt *Location) float64 {
+	dist := src.distance(*tgt)
+
+	heightSrc := src.GetElevation()
+	heightTgt := tgt.GetElevation()
+
+	alt := math.Atan2(heightTgt-heightSrc, dist)
+	alt -= dist / (2 * radiusEarthMeters)
+
+	return angle.NormalizeRadiansLatitude(alt)
+}
+
+/*
+
+This procedure produces angles that are too small!
+
+Considers the earth as round
+Rounding errors probably result in wrong angles: theta is very small!
 
 func (src Location) HorizontalAngleTo(tgt *Location) float64 {
 	theta := src.angleAtCenterOfEarth(tgt)
@@ -14,7 +31,7 @@ func (src Location) HorizontalAngleTo(tgt *Location) float64 {
 	heightA := src.GetElevation()
 	heightB := tgt.GetElevation()
 
-	d1 := 2 * math.Sin(theta/2) * (circumferenceEarthMeters + heightA)
+	d1 := 2 * math.Sin(theta/2) * (radiusEarthMeters + heightA)
 
 	counterThetaHalves := (math.Pi - theta) / 2
 	dh := heightB - heightA
@@ -28,6 +45,7 @@ func (src Location) HorizontalAngleTo(tgt *Location) float64 {
 	gamma = angle.NormalizeRadiansLatitude(gamma)
 	return gamma
 }
+*/
 
 func (src Location) AzimutAngleTo(tgt *Location) float64 {
 	srcLat := angle.RadiansFromDegrees(src.Latitude)

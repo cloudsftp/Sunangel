@@ -14,21 +14,21 @@ func testElevationGeneral(t *testing.T, loc *location.Location, want float64) {
 }
 
 func TestElevation(t *testing.T) {
-	testElevationGeneral(t, locationGaensberg, 384)
+	testElevationGeneral(t, locationParagleiter, 384)
 	testElevationGeneral(t, locationTurbinesWTB, 478)
 	testElevationGeneral(t, locationMuenchen, 540)
 }
 
 func testAngleToGeneral(t *testing.T, a, b *location.Location, want float64) {
-	got := a.HorizontalAngleTo(b)
+	got := a.AltitudeAngleTo(b)
 
 	assertPreciselyEqual(t, got, want)
 }
 
 func TestAngleTo(t *testing.T) {
-	testAngleToGeneral(t, locationGaensberg, locationTurbinesWTB, 0.004382285396)
-	testAngleToGeneral(t, locationGaensberg, locationMuenchen, -0.017952603423)
-	testAngleToGeneral(t, locationMuenchen, locationGaensberg, -0.019268073648)
+	testAngleToGeneral(t, locationParagleiter, locationTurbinesWTB, 0.007488244041055)
+	testAngleToGeneral(t, locationParagleiter, locationMuenchen, -0.012300042822072)
+	testAngleToGeneral(t, locationMuenchen, locationParagleiter, -0.014151429022413)
 }
 
 func testAzimutAngleToGeneral(t *testing.T, a, b *location.Location, want float64) {
@@ -38,8 +38,8 @@ func testAzimutAngleToGeneral(t *testing.T, a, b *location.Location, want float6
 }
 
 func TestAzimutAngleTo(t *testing.T) {
-	a := location.NewLocation(51.5, 0)
-	b := location.NewLocation(-22.97, -43.18)
+	a := location.NewLocation("A", 51.5, 0)
+	b := location.NewLocation("B", -22.97, -43.18)
 
 	want := float64(-2.4548) + 2*math.Pi
 

@@ -31,11 +31,11 @@ func TestAzimutSunAngleAt(t *testing.T) {
 }
 
 func TestAltitudeSunangleAtCustom(t *testing.T) {
-	testAltitudeAngleGeneral(t, dateCustom, locationGaensberg, 0.00902)
+	testAltitudeAngleGeneral(t, dateCustom, locationParagleiter, 0.00902)
 }
 
 func TestAzimutSunAngleAtCustom(t *testing.T) {
-	got := sunangel.AzimutSunAngleAt(dateCustom, locationGaensberg)
+	got := sunangel.AzimutSunAngleAt(dateCustom, locationParagleiter)
 	want := float64(1.19716) + math.Pi
 
 	assertApproxEqual(t, got, want)
@@ -43,7 +43,7 @@ func TestAzimutSunAngleAtCustom(t *testing.T) {
 
 func TestAltitudeAngleAtBugNegativeGaensberg(t *testing.T) {
 	date := time.Date(2022, time.February, 27, 17, 57, 00, 703124999999, berlinTiomezone)
-	want := float64(-0.02045)
+	want := float64(-0.02128)
 
-	testAltitudeAngleGeneral(t, date, locationGaensberg, want)
+	testAltitudeAngleGeneral(t, date, locationParagleiter, want)
 }

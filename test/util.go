@@ -10,12 +10,12 @@ import (
 
 var (
 	dateWiki         = time.Date(2006, time.August, 6, 6, 0, 0, 0, time.UTC)
-	locationMuenchen = location.NewLocation(48.1, 11.6)
+	locationMuenchen = location.NewLocation("Muenchen", 48.1, 11.6)
 
-	dateCustom        = time.Date(2022, time.February, 11, 17, 30, 0, 0, time.FixedZone("Berlin, DE", 3600))
-	locationGaensberg = location.NewLocation(48.8187132, 9.5878127)
+	dateCustom          = time.Date(2022, time.February, 11, 17, 30, 0, 0, time.FixedZone("Berlin, DE", 3600))
+	locationParagleiter = location.NewLocation("Paragleiter", 48.8187132, 9.5878127)
 
-	locationTurbinesWTB = location.NewLocation(48.7866067, 9.4424222)
+	locationTurbinesWTB = location.NewLocation("WTB", 48.7866067, 9.4424222)
 )
 
 func assertApproxEqualEpsilon(t *testing.T, got, want, epsilon float64) {
