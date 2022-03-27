@@ -3,6 +3,8 @@ module github.com/cloudsftp/Sunangel
 go 1.17
 
 require (
+	github.com/Arafatk/glot v0.0.0-20180312013246-79d5219000f0 // indirect
+	github.com/arafatk/glot v0.0.0-20180312013246-79d5219000f0 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
 	github.com/dgraph-io/badger/v3 v3.2103.2 // indirect

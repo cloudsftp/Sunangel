@@ -21,7 +21,7 @@ func (loc *Location) computeHorizon() {
 		loc.Horizon[i] = -math.Pi
 	}
 
-	for k := 1; k <= numSteps; k++ {
+	for k := 16; k <= numSteps; k++ {
 		azimutAnglesMeasured, horizonAnglesMeasured := loc.measureHorizonAngles(k)
 
 		currHorizonAngleResolution := computeSampleResolution(len(horizonAnglesMeasured))
