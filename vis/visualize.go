@@ -2,11 +2,12 @@ package vis
 
 import (
 	"fmt"
+	"math"
 	"time"
 
 	"github.com/arafatk/glot"
+	"github.com/cloudsftp/Sunangel/angle"
 	"github.com/cloudsftp/Sunangel/location"
-	"github.com/cloudsftp/Sunangel/util"
 
 	"github.com/cloudsftp/Sunangel/sunangel"
 	"github.com/cloudsftp/Sunangel/sunset"
@@ -32,23 +33,21 @@ func VisualizeHorizon(loc *location.Location, startTime time.Time, duration time
 	azimut := make([]float64, numSteps)
 	altitude := make([]float64, numSteps)
 
+	lastAzimut := float64(0)
+	azimutOffset := float64(0)
+
 	currTime := startTime
 	for i := 0; i < numSteps; i++ {
-		azimut[i] = sunangel.AzimutSunAngleAt(currTime, loc)
+		currAzimut := sunangel.AzimutSunAngleAt(currTime, loc)
+		if currAzimut < lastAzimut {
+			azimutOffset += 2 * math.Pi
+		}
+		lastAzimut = currAzimut
+
+		azimut[i] = azimutOffset + currAzimut
 		altitude[i] = sunangel.AltitudeSunAngleAt(currTime, loc)
 
 		currTime = currTime.Add(timeStep)
-	}
-
-	x := make([]float64, numSteps)
-
-	startAngle := azimut[0]
-	stopAngle := azimut[len(azimut)-1]
-	angleStep := (stopAngle - startAngle) / float64(numSteps)
-	currAngle := startAngle
-	for i := 0; i < numSteps; i++ {
-		x[i] = currAngle
-		currAngle += angleStep
 	}
 
 	altitudeAtAzimut := func(azimutVal float64) float64 {
@@ -57,19 +56,14 @@ func VisualizeHorizon(loc *location.Location, startTime time.Time, duration time
 			leftIndex++
 		}
 
-		return util.LinInt(
-			azimutVal,
-			azimut[leftIndex], altitude[leftIndex],
-			azimut[leftIndex+1], altitude[leftIndex+1],
-		)
+		return altitude[leftIndex]
 	}
-	plot.AddFunc2d("Sun", "lines", x, altitudeAtAzimut)
+	plot.AddFunc2d("Sun", "lines", azimut, altitudeAtAzimut)
 
 	horizonAltitudeAtAzimut := func(azimutVal float64) float64 {
-		return loc.GetHorizonAngleAt(azimutVal)
+		return loc.GetHorizonAngleAt(angle.NormalizeRadians(azimutVal))
 	}
-	plot.AddFunc2d("Horizon", "lines", x, horizonAltitudeAtAzimut)
+	plot.AddFunc2d("Horizon", "lines", azimut, horizonAltitudeAtAzimut)
 
 	plot.SavePlot(fmt.Sprintf("Img/Horizons/%s.png", loc.Name))
-
 }
