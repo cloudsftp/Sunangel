@@ -10,13 +10,12 @@ import (
 
 var (
 	dateWiki         = time.Date(2006, time.August, 6, 6, 0, 0, 0, time.UTC)
-	locationMuenchen = *location.NewLocation(48.1, 11.6)
+	locationMuenchen = location.NewLocation("Muenchen", 48.1, 11.6)
 
-	dateCustom        = time.Date(2022, time.February, 11, 17, 30, 0, 0, time.FixedZone("Berlin, DE", 3600))
-	locationGaensberg = *location.NewLocation(48.8187132, 9.5878127)
+	dateCustom          = time.Date(2022, time.February, 11, 17, 30, 0, 0, time.FixedZone("Berlin, DE", 3600))
+	locationParagleiter = location.NewLocation("Paragleiter", 48.8187132, 9.5878127)
 
-	locationTurbinesWTB = *location.NewLocation(48.7866067, 9.4424222)
-	locationLinsenberg  = *location.NewLocation(48.819, 9.557)
+	locationTurbinesWTB = location.NewLocation("WTB", 48.7866067, 9.4424222)
 )
 
 func assertApproxEqualEpsilon(t *testing.T, got, want, epsilon float64) {
@@ -37,15 +36,5 @@ func assertPreciselyEqual(t *testing.T, got, want float64) {
 func assertEqual(t *testing.T, got, want float64) {
 	if got != want {
 		t.Errorf("got %.15f want %.15f", got, want)
-	}
-}
-
-func assertDatePreciselyEqual(t *testing.T, got, want time.Time) {
-	if got.Year() != want.Year() || got.Month() != want.Month() || got.Day() != want.Day() ||
-		got.Hour() != want.Hour() || got.Minute() != want.Minute() || got.Second() != want.Second() {
-		t.Errorf("got %04d-%02d-%02d %02d:%02d:%02d want %04d-%02d-%02d %02d:%02d:%02d",
-			got.Year(), got.Month(), got.Day(), got.Hour(), got.Minute(), got.Second(),
-			want.Year(), want.Month(), want.Day(), want.Hour(), want.Minute(), want.Second(),
-		)
 	}
 }

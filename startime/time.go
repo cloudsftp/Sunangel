@@ -18,7 +18,8 @@ func JulianDaysSince2000At(date time.Time) float64 {
 	return jd
 }
 
-func midnightOf(date time.Time) time.Time {
+// MidnightOf returns a time struct at midnight of a given time struct.
+func MidnightOf(date time.Time) time.Time {
 	year := date.Year()
 	month := date.Month()
 	day := date.Day()
@@ -30,7 +31,7 @@ func midnightOf(date time.Time) time.Time {
 // JulianDaysSince2000AtToMidnightOf returns the julian days
 // since the beginning of the year 2000 until midnight of day of the given time.
 func JulianDaysSince2000ToMidnightOf(date time.Time) float64 {
-	date = midnightOf(date)
+	date = MidnightOf(date)
 	jd0 := JulianDaysSince2000At(date)
 	return jd0
 }
@@ -47,8 +48,8 @@ func JulianCenturiesSince2000ToMidnightOf(date time.Time) float64 {
 func TimeOfDayAsDecimal(date time.Time) float64 {
 	timeOfDay := float64(date.Hour())
 	timeOfDay += float64(date.Minute()) / 60
-	timeOfDay += float64(date.Second()) / 6000
-	timeOfDay += float64(date.Nanosecond()) / 1e13
+	timeOfDay += float64(date.Second()) / 3600
+	timeOfDay += float64(date.Nanosecond()) / (3600 * 1e9)
 
 	return timeOfDay
 }

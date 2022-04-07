@@ -6,7 +6,7 @@ import (
 	"github.com/cloudsftp/Sunangel/angle"
 )
 
-func (src Location) angleAtCenterOfEarth(tgt Location) float64 {
+func (src Location) angleAtCenterOfEarth(tgt *Location) float64 {
 	srcLat := angle.RadiansFromDegrees(src.Latitude)
 	tgtLat := angle.RadiansFromDegrees(tgt.Latitude)
 	srcLong := angle.RadiansFromDegrees(src.Longitude)

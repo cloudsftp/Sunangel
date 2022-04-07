@@ -19,7 +19,7 @@ func RadiansFromDegrees(degrees float64) float64 {
 func NormalizeRadians(radians float64) float64 {
 	radians = math.Mod(radians, radiansPerRotation)
 	if radians < 0 {
-		radians += 2 * math.Pi
+		radians += radiansPerRotation
 	}
 	return radians
 }
@@ -28,8 +28,8 @@ func NormalizeRadians(radians float64) float64 {
 // It will be in the range [-π, π)
 func NormalizeRadiansLatitude(radians float64) float64 {
 	radians = NormalizeRadians(radians)
-	if radians >= math.Pi {
-		radians -= 2 * math.Pi
+	if radians >= radiansPerRotation/2 {
+		radians -= radiansPerRotation
 	}
 	return radians
 }

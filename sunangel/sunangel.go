@@ -17,15 +17,22 @@ const (
 
 // AltitudeSunAngleAt returns the altitude of the sun at a given time and place.
 // The latitude is the vertical angle between the sun and the horizon.
-func AltitudeSunAngleAt(date time.Time, place location.Location) float64 {
+func AltitudeSunAngleAt(date time.Time, place *location.Location) float64 {
+	// altitudeAngle := uncorrectedSunAngleAt(date, place)
 	altitudeAngle := correctedSunAngleAt(date, place)
 	altitudeAngle = angle.NormalizeRadiansLatitude(altitudeAngle)
 	return altitudeAngle
 }
 
-func correctedSunAngleAt(date time.Time, place location.Location) float64 {
+func correctedSunAngleAt(date time.Time, place *location.Location) float64 {
 	h := uncorrectedSunAngleAt(date, place)
 	hd := angle.DegreesFromRadians(h)
+	hd = angle.NormalizeDegreesLatitude(hd)
+
+	epsilon := 0.2
+	if math.Abs(hd+refractionC2) < epsilon {
+		return h
+	}
 
 	argumentd := hd + refractionC1/(hd+refractionC2)
 	argument := angle.RadiansFromDegrees(argumentd)
@@ -35,7 +42,7 @@ func correctedSunAngleAt(date time.Time, place location.Location) float64 {
 	return angle.RadiansFromDegrees(hRd)
 }
 
-func uncorrectedSunAngleAt(date time.Time, place location.Location) float64 {
+func uncorrectedSunAngleAt(date time.Time, place *location.Location) float64 {
 	latitude := angle.RadiansFromDegrees(place.Latitude)
 	longitude := angle.RadiansFromDegrees(place.Longitude)
 
@@ -50,7 +57,7 @@ func uncorrectedSunAngleAt(date time.Time, place location.Location) float64 {
 
 // AzimutSunAngleAt returns the azimut of the sun at a given time and place.
 // The azimut is the horizontal angle between the sun to the orientation north.
-func AzimutSunAngleAt(date time.Time, place location.Location) float64 {
+func AzimutSunAngleAt(date time.Time, place *location.Location) float64 {
 	latitude := angle.RadiansFromDegrees(place.Latitude)
 	longitude := angle.RadiansFromDegrees(place.Longitude)
 
