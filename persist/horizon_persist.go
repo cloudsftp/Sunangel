@@ -1,4 +1,4 @@
-package location
+package persist
 
 import (
 	"encoding/binary"
@@ -6,6 +6,7 @@ import (
 	"log"
 	"math"
 
+	"github.com/cloudsftp/Sunangel/location"
 	badger "github.com/dgraph-io/badger/v3"
 )
 
@@ -16,7 +17,7 @@ var (
 	db            *badger.DB
 )
 
-func (place *Location) LoadHorizonOfLocation() {
+func (place *location.Location) LoadHorizonOfLocation() {
 	ok := place.tryLoadHorizon()
 
 	if ok {

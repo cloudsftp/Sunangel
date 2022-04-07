@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/cloudsftp/Sunangel/horizon"
 	"github.com/cloudsftp/Sunangel/location"
 	"github.com/cloudsftp/Sunangel/sunset"
 )
@@ -32,28 +33,25 @@ func testSunsetEstimatorGeneral(t *testing.T, wantString string, place *location
 		t.Errorf("could not parse date '%s'", wantString)
 	}
 
-	got := sunset.EstimateSunsetOf(want, place)
+	horizon := horizon.NewHorizon(place)
+	got := sunset.EstimateSunsetOf(want, horizon)
 
 	assertDatePreciselyEqual(t, got, want)
 }
 
 func TestSunsetEstimatorParagleiter(t *testing.T) {
-	locationParagleiter.RecomputeHorizon()
 	testSunsetEstimatorGeneral(t, "2022-03-23 18:34:00 CET", locationParagleiter)
 }
 
 func TestSunsetEstimatorFreibad(t *testing.T) {
-	locationFreibad.RecomputeHorizon()
 	testSunsetEstimatorGeneral(t, "2022-03-22 18:25:29 CET", locationFreibad)
 }
 
 func TestSunsetEstimatorOWH(t *testing.T) {
-	locationOWH.RecomputeHorizon()
 	testSunsetEstimatorGeneral(t, "2022-03-24 18:34:50 CET", locationOWH)
 	testSunsetEstimatorGeneral(t, "2022-04-03 19:47:23 CEST", locationOWH)
 }
 
 func TestSunsetEstimatorPluederwiese(t *testing.T) { // TODO: folter out near hills
-	locationPluederwiese.RecomputeHorizon()
 	testSunsetEstimatorGeneral(t, "2022-03-26 18:43:38 CET", locationPluederwiese)
 }
