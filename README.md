@@ -2,4 +2,4 @@
 
 ## Status
 
-![example branch parameter](https://github.com/cloudsftp/Sunangel/actions/workflows/unit_tests.yml/badge.svg?branch=develop)
+![unit test status](https://github.com/cloudsftp/Sunangel/actions/workflows/unit_tests.yaml/badge.svg?branch=develop)
