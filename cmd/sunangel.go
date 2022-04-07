@@ -18,8 +18,8 @@ func main() {
 	// loc := location.NewLocation("Burg", 48.8230357, 9.5823731)
 	// loc := location.NewLocation("Freibad", 48.8292463, 9.5773359)
 	// loc := location.NewLocation("Freibad oben", 48.83523, 9.57165)
-	// loc := location.NewLocation("OWH", 48.814, 9.59172)
-	loc := location.NewLocation("Pluderwiese", 48.8320969, 9.6042998)
+	loc := location.NewLocation("OWH", 48.814, 9.59172)
+	// loc := location.NewLocation("Pluderwiese", 48.8320969, 9.6042998)
 
 	// loc.RecomputeHorizon()
 

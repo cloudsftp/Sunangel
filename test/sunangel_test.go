@@ -10,6 +10,8 @@ import (
 	"github.com/cloudsftp/Sunangel/sunangel"
 )
 
+var berlinTiomezone = time.FixedZone("Berlin, DE", 3600)
+
 func testAltitudeAngleGeneral(t *testing.T, date time.Time, place *location.Location, want float64) {
 	got := sunangel.AltitudeSunAngleAt(date, place)
 
