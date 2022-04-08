@@ -20,7 +20,6 @@ jobs:
           key: ${{ runner.os }}-core-tests-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - run: ls ~/.geoelevations
       - uses: actions/setup-go@v3
         with:
           go-version: 1.18
