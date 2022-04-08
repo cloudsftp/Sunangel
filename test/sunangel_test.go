@@ -10,8 +10,6 @@ import (
 	"github.com/cloudsftp/Sunangel/sunangel"
 )
 
-var berlinTiomezone = time.FixedZone("Berlin, DE", 3600)
-
 func testAltitudeAngleGeneral(t *testing.T, date time.Time, place *location.Location, want float64) {
 	got := sunangel.AltitudeSunAngleAt(date, place)
 
@@ -44,7 +42,7 @@ func TestAzimutSunAngleAtCustom(t *testing.T) {
 }
 
 func TestAltitudeAngleAtBugNegativeGaensberg(t *testing.T) {
-	date := time.Date(2022, time.February, 27, 17, 57, 00, 703124999999, berlinTiomezone)
+	date := time.Date(2022, time.February, 27, 17, 57, 00, 703124999999, berlinTime)
 	want := float64(-0.02128)
 
 	testAltitudeAngleGeneral(t, date, locationParagleiter, want)

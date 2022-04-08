@@ -46,8 +46,6 @@ func JulianCenturiesSince2000ToMidnightOf(date time.Time) float64 {
 
 // TimeOfDayAsDecimal returns the time of the day of the given time as a decimal number.
 func TimeOfDayAsDecimal(date time.Time) float64 {
-	date = date.UTC()
-
 	timeOfDay := float64(date.Hour())
 	timeOfDay += float64(date.Minute()) / 60
 	timeOfDay += float64(date.Second()) / 3600
