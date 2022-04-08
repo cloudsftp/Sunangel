@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	stepSize       float64 = 0.0003
-	stepSizeMeters float64 = 30      // approximately
-	numSteps       int     = 2 << 10 // 1024
+	stepSize        float64 = 0.0003
+	stepSizeMeters  float64 = 30      // approximately
+	maxSampleRadius int     = 2 << 10 // 1024
 )
 
 func (horizon *Horizon) compute() {
@@ -21,8 +21,8 @@ func (horizon *Horizon) compute() {
 		horizon.altitude[i] = -math.Pi
 	}
 
-	for k := 1; k <= numSteps; k++ {
-		azimutAnglesMeasured, horizonAnglesMeasured := horizon.measureHorizonAngles(k)
+	for sampleRadius := 1; sampleRadius <= maxSampleRadius; sampleRadius++ {
+		azimutAnglesMeasured, horizonAnglesMeasured := horizon.measureHorizonAngles(sampleRadius)
 
 		currHorizonAngleResolution := computeSampleResolution(len(horizonAnglesMeasured))
 		horizon.interpolateHorizonAnglesFromSamples(azimutAnglesMeasured, horizonAnglesMeasured, currHorizonAngleResolution)
@@ -37,14 +37,17 @@ func computeSampleResolution(measurementResolution int) int {
 	return int(math.Min(sampleResolution, float64(horizonAngleResolution)))
 }
 
-func (horizon Horizon) measureHorizonAngles(distance int) ([]float64, []float64) {
-	offsets := circle(distance)
+func (horizon Horizon) measureHorizonAngles(sampleRadius int) ([]float64, []float64) {
+	offsets := circle(sampleRadius)
 
-	azimutAngles := make([]float64, len(offsets))
-	horizonAngles := make([]float64, len(offsets))
+	skips := int(math.Max(float64(len(offsets)/(2*horizonAngleResolution)), 1))
+	numSamples := int(len(offsets) / skips)
 
-	for i := 0; i < len(offsets); i++ {
-		sampleLocation := computeOffsetLocation(horizon.Place, offsets[i])
+	azimutAngles := make([]float64, numSamples)
+	horizonAngles := make([]float64, numSamples)
+
+	for i := 0; i < numSamples; i++ {
+		sampleLocation := computeOffsetLocation(horizon.Place, offsets[i*skips])
 
 		azimutAngles[i] = horizon.Place.AzimutAngleTo(sampleLocation)
 		horizonAngles[i] = horizon.Place.AltitudeAngleTo(sampleLocation)
