@@ -18,15 +18,9 @@ var (
 )
 
 func assertDatePreciselyEqual(t *testing.T, got, want time.Time) {
-	got = got.UTC()
-	want = want.UTC()
-
 	if got.Year() != want.Year() || got.Month() != want.Month() || got.Day() != want.Day() ||
 		got.Hour() != want.Hour() || got.Minute() != want.Minute() || got.Second() != want.Second() {
-		t.Errorf("got %04d-%02d-%02d %02d:%02d:%02d want %04d-%02d-%02d %02d:%02d:%02d",
-			got.Year(), got.Month(), got.Day(), got.Hour(), got.Minute(), got.Second(),
-			want.Year(), want.Month(), want.Day(), want.Hour(), want.Minute(), want.Second(),
-		)
+		t.Errorf("got %s want %s", got.Format(timeLayout), want.Format(timeLayout))
 	}
 }
 

@@ -54,5 +54,5 @@ func binarySunsetSearch(lowerBound, upperBound time.Time, horizon *horizon.Horiz
 }
 
 func formatBound(date time.Time) string {
-	return date.Format("15:04:05.000")
+	return date.Format("15:04:05.000 MST")
 }
