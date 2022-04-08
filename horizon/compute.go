@@ -9,8 +9,9 @@ import (
 )
 
 const (
-	stepSize float64 = 0.0003
-	numSteps int     = 2 << 11 // 2048
+	stepSize       float64 = 0.0003
+	stepSizeMeters float64 = 30      // approximately
+	numSteps       int     = 2 << 11 // 2048
 )
 
 func (horizon *Horizon) compute() {
@@ -20,7 +21,9 @@ func (horizon *Horizon) compute() {
 		horizon.altitude[i] = -math.Pi
 	}
 
-	for k := 16; k <= numSteps; k++ {
+	startDistance := horizon.radiusIgnore * math.Sqrt2
+	startK := int(math.Max(math.Ceil(startDistance/stepSizeMeters), 1))
+	for k := startK; k <= numSteps; k++ {
 		azimutAnglesMeasured, horizonAnglesMeasured := horizon.measureHorizonAngles(k)
 
 		currHorizonAngleResolution := computeSampleResolution(len(horizonAnglesMeasured))
