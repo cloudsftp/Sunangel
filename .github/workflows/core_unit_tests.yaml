@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - develop
-      - feature/continuous_integration
 
 jobs:
   unit_tests:
