@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/cloudsftp/Sunangel/angle"
+	"github.com/cloudsftp/Sunangel/horizon"
 	"github.com/cloudsftp/Sunangel/location"
 	"github.com/cloudsftp/Sunangel/sunangel"
 	"github.com/cloudsftp/Sunangel/sunset"
@@ -14,18 +15,18 @@ import (
 func main() {
 
 	date := time.Now().Add(-0 * 24 * time.Hour)
-	// loc := location.NewLocation("Paragleiter", 48.8187132, 9.5878127)
-	// loc := location.NewLocation("Burg", 48.8230357, 9.5823731)
-	// loc := location.NewLocation("Freibad", 48.8292463, 9.5773359)
-	// loc := location.NewLocation("Freibad oben", 48.83523, 9.57165)
-	loc := location.NewLocation("OWH", 48.814, 9.59172)
-	// loc := location.NewLocation("Pluderwiese", 48.8320969, 9.6042998)
+	// place := location.NewLocation("Paragleiter", 48.8187132, 9.5878127)
+	// place := location.NewLocation("Burg", 48.8230357, 9.5823731)
+	// place := location.NewLocation("Freibad", 48.8292463, 9.5773359)
+	// place := location.NewLocation("Freibad oben", 48.83523, 9.57165)
+	// place := location.NewLocation("OWH", 48.814, 9.59172)
+	place := location.NewLocation("Pluderwiese", 48.8320969, 9.6042998)
 
-	// loc.RecomputeHorizon()
+	horizon := horizon.NewHorizon(place, 500)
 
-	estimatedSunsetTime := sunset.EstimateSunsetOf(date, loc)
-	azimutAngle := sunangel.AzimutSunAngleAt(estimatedSunsetTime, loc)
-	horizonAngle := loc.GetHorizonAngleAt(azimutAngle)
+	estimatedSunsetTime := sunset.EstimateSunsetOf(date, horizon)
+	azimutAngle := sunangel.AzimutSunAngleAt(estimatedSunsetTime, place)
+	horizonAngle := horizon.GetAltitude(azimutAngle)
 
 	fmt.Println(estimatedSunsetTime)
 	fmt.Printf(
@@ -39,6 +40,6 @@ func main() {
 			fmt.Printf("index %4d, angle %f\n", i, angle.DegreesFromRadians(loc.Horizon[i]))
 		}*/
 
-	vis.VisualizeSunset(loc, date)
+	vis.VisualizeSunset(horizon, date)
 
 }

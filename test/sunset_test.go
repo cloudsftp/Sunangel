@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/cloudsftp/Sunangel/horizon"
 	"github.com/cloudsftp/Sunangel/location"
 	"github.com/cloudsftp/Sunangel/sunset"
 )
@@ -26,34 +27,34 @@ func assertDatePreciselyEqual(t *testing.T, got, want time.Time) {
 	}
 }
 
-func testSunsetEstimatorGeneral(t *testing.T, wantString string, place *location.Location) {
+func testSunsetEstimatorGeneral(t *testing.T, wantString string, horizon *horizon.Horizon) {
 	want, err := time.Parse(timeLayout, wantString)
 	if err != nil {
 		t.Errorf("could not parse date '%s'", wantString)
 	}
 
-	got := sunset.EstimateSunsetOf(want, place)
+	got := sunset.EstimateSunsetOf(want, horizon)
 
 	assertDatePreciselyEqual(t, got, want)
 }
 
 func TestSunsetEstimatorParagleiter(t *testing.T) {
-	locationParagleiter.RecomputeHorizon()
-	testSunsetEstimatorGeneral(t, "2022-03-23 18:34:00 CET", locationParagleiter)
+	horizonParagleiter := horizon.NewHorizon(locationParagleiter, 0)
+	testSunsetEstimatorGeneral(t, "2022-03-23 18:33:58 CET", horizonParagleiter)
 }
 
 func TestSunsetEstimatorFreibad(t *testing.T) {
-	locationFreibad.RecomputeHorizon()
-	testSunsetEstimatorGeneral(t, "2022-03-22 18:25:29 CET", locationFreibad)
+	horizonFreibad := horizon.NewHorizon(locationFreibad, 0)
+	testSunsetEstimatorGeneral(t, "2022-03-22 18:25:30 CET", horizonFreibad)
 }
 
 func TestSunsetEstimatorOWH(t *testing.T) {
-	locationOWH.RecomputeHorizon()
-	testSunsetEstimatorGeneral(t, "2022-03-24 18:34:50 CET", locationOWH)
-	testSunsetEstimatorGeneral(t, "2022-04-03 19:47:23 CEST", locationOWH)
+	horizonOWH := horizon.NewHorizon(locationOWH, 0)
+	testSunsetEstimatorGeneral(t, "2022-03-24 18:34:43 CET", horizonOWH)
+	testSunsetEstimatorGeneral(t, "2022-04-03 19:47:26 CEST", horizonOWH)
 }
 
-func TestSunsetEstimatorPluederwiese(t *testing.T) { // TODO: folter out near hills
-	locationPluederwiese.RecomputeHorizon()
-	testSunsetEstimatorGeneral(t, "2022-03-26 18:43:38 CET", locationPluederwiese)
+func TestSunsetEstimatorPluederwiese(t *testing.T) {
+	horizonPluederwiese := horizon.NewHorizon(locationPluederwiese, 500)
+	testSunsetEstimatorGeneral(t, "2022-03-26 18:33:36 CET", horizonPluederwiese)
 }
