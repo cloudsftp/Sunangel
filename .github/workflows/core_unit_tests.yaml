@@ -1,10 +1,9 @@
-name: Core Unit Tests
+name: Core Unit Tests Develop
 
 on:
   push:
     branches:
       - develop
-      - feature/continuous_integration
 
 jobs:
   unit_tests:
@@ -17,7 +16,7 @@ jobs:
             ~/go/pkg/mod
             ~/.cache/go-build
             ~/.geoelevations
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-core-tests-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
       - uses: actions/setup-go@v3
