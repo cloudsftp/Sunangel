@@ -17,7 +17,7 @@ jobs:
             ~/go/pkg/mod
             ~/.cache/go-build
             ~/.geoelevations
-          key: ${{ runner.os }}-core-tests-${{ hashFiles('go.sum') }}
+          key: ${{ runner.os }}-core-tests-${{ hashFiles('**/go.mod') }}
           restore-keys: |
             ${{ runner.os }}-go-
       - run: ls ~/.geoelevations
