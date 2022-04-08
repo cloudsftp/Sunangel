@@ -10,6 +10,7 @@ jobs:
     name: Go Unit Tests
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - uses: actions/cache@v3
         with:
           path: |
@@ -19,8 +20,8 @@ jobs:
           key: ${{ runner.os }}-core-tests-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
+      - run: ls ~/.geoelevations
       - uses: actions/setup-go@v3
         with:
           go-version: 1.18
-      - uses: actions/checkout@v3
       - run: bash run_core_tests.sh
