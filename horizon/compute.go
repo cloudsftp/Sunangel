@@ -11,7 +11,7 @@ import (
 const (
 	stepSize       float64 = 0.0003
 	stepSizeMeters float64 = 30      // approximately
-	numSteps       int     = 2 << 11 // 2048
+	numSteps       int     = 2 << 10 // 1024
 )
 
 func (horizon *Horizon) compute() {
@@ -21,9 +21,7 @@ func (horizon *Horizon) compute() {
 		horizon.altitude[i] = -math.Pi
 	}
 
-	startDistance := horizon.radiusIgnore * math.Sqrt2
-	startK := int(math.Max(math.Ceil(startDistance/stepSizeMeters), 1))
-	for k := startK; k <= numSteps; k++ {
+	for k := 1; k <= numSteps; k++ {
 		azimutAnglesMeasured, horizonAnglesMeasured := horizon.measureHorizonAngles(k)
 
 		currHorizonAngleResolution := computeSampleResolution(len(horizonAnglesMeasured))
@@ -34,60 +32,31 @@ func (horizon *Horizon) compute() {
 	}
 }
 
-func (horizon Horizon) measureHorizonAngles(distance int) ([]float64, []float64) {
-	skips := horizon.computeSkips(distance)
-	numSamplesPerDiagonal := int(math.Ceil(float64(distance) / float64(skips)))
-	numSamples := 4 * numSamplesPerDiagonal
-
-	azimutAngles := make([]float64, numSamples)
-	horizonAngles := make([]float64, numSamples)
-
-	for i := 0; i < numSamplesPerDiagonal; i++ {
-		offset := i * skips
-		horizon.measureHorizonAngle(distance-offset, offset, i, azimutAngles, horizonAngles)
-		horizon.measureHorizonAngle(-offset, distance-offset, numSamplesPerDiagonal+i, azimutAngles, horizonAngles)
-		horizon.measureHorizonAngle(-(distance - offset), -offset, 2*numSamplesPerDiagonal+i, azimutAngles, horizonAngles)
-		horizon.measureHorizonAngle(offset, -(distance - offset), 3*numSamplesPerDiagonal+i, azimutAngles, horizonAngles)
-	}
-
-	return azimutAngles, horizonAngles
-}
-
-func (horizon Horizon) computeSkips(distance int) int {
-	// Angles changes are the most extreme on the diagonal.
-	// Check what size of skips produces acceptable angle changes
-	indexDiagonal := int(distance / 2)
-	locationDiagonal := horizon.computeOffsetLocation(distance-indexDiagonal, indexDiagonal)
-	angleDiagonal := horizon.Place.AzimutAngleTo(locationDiagonal)
-
-	skips := 1
-	fineGranularEnough := true
-	for ; fineGranularEnough; skips++ {
-		locationSkip := horizon.computeOffsetLocation(distance-indexDiagonal-skips, indexDiagonal+skips)
-		angleSkip := horizon.Place.AzimutAngleTo(locationSkip)
-
-		fineGranularEnough = math.Abs(angleSkip-angleDiagonal) < 2*math.Pi/float64(horizonAngleResolution)
-	}
-
-	return skips - 1
-}
-
 func computeSampleResolution(measurementResolution int) int {
 	sampleResolution := math.Pow(2, math.Floor(math.Log2(float64(measurementResolution))))
 	return int(math.Min(sampleResolution, float64(horizonAngleResolution)))
 }
 
-func (horizon Horizon) measureHorizonAngle(stepsNorth, stepsEast, index int, azimutAngles, horizonAngles []float64) {
-	sampleLocation := horizon.computeOffsetLocation(stepsNorth, stepsEast)
+func (horizon Horizon) measureHorizonAngles(distance int) ([]float64, []float64) {
+	offsets := circle(distance)
 
-	azimutAngles[index] = horizon.Place.AzimutAngleTo(sampleLocation)
-	horizonAngles[index] = horizon.Place.AltitudeAngleTo(sampleLocation)
+	azimutAngles := make([]float64, len(offsets))
+	horizonAngles := make([]float64, len(offsets))
+
+	for i := 0; i < len(offsets); i++ {
+		sampleLocation := computeOffsetLocation(horizon.Place, offsets[i])
+
+		azimutAngles[i] = horizon.Place.AzimutAngleTo(sampleLocation)
+		horizonAngles[i] = horizon.Place.AltitudeAngleTo(sampleLocation)
+	}
+
+	return azimutAngles, horizonAngles
 }
 
-func (horizon Horizon) computeOffsetLocation(stepsNorth, stepsEast int) *location.Location {
+func computeOffsetLocation(place *location.Location, offset offsetCoordinates) *location.Location {
 	offsetLocation := location.Location{}
-	offsetLocation.Latitude = horizon.Place.Latitude + float64(stepsNorth)*stepSize
-	offsetLocation.Longitude = horizon.Place.Longitude + float64(stepsEast)*stepSize
+	offsetLocation.Latitude = place.Latitude + float64(offset.latitude)*stepSize
+	offsetLocation.Longitude = place.Longitude + float64(offset.longitude)*stepSize
 
 	return &offsetLocation
 }
