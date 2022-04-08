@@ -40,21 +40,21 @@ func testSunsetEstimatorGeneral(t *testing.T, wantString string, horizon *horizo
 
 func TestSunsetEstimatorParagleiter(t *testing.T) {
 	horizonParagleiter := horizon.NewHorizon(locationParagleiter, 0)
-	testSunsetEstimatorGeneral(t, "2022-03-23 18:34:00 CET", horizonParagleiter)
+	testSunsetEstimatorGeneral(t, "2022-03-23 18:33:58 CET", horizonParagleiter)
 }
 
 func TestSunsetEstimatorFreibad(t *testing.T) {
 	horizonFreibad := horizon.NewHorizon(locationFreibad, 0)
-	testSunsetEstimatorGeneral(t, "2022-03-22 18:25:29 CET", horizonFreibad)
+	testSunsetEstimatorGeneral(t, "2022-03-22 18:25:30 CET", horizonFreibad)
 }
 
 func TestSunsetEstimatorOWH(t *testing.T) {
 	horizonOWH := horizon.NewHorizon(locationOWH, 0)
-	testSunsetEstimatorGeneral(t, "2022-03-24 18:34:50 CET", horizonOWH)
-	testSunsetEstimatorGeneral(t, "2022-04-03 19:47:23 CEST", horizonOWH)
+	testSunsetEstimatorGeneral(t, "2022-03-24 18:34:43 CET", horizonOWH)
+	testSunsetEstimatorGeneral(t, "2022-04-03 19:47:26 CEST", horizonOWH)
 }
 
 func TestSunsetEstimatorPluederwiese(t *testing.T) {
 	horizonPluederwiese := horizon.NewHorizon(locationPluederwiese, 500)
-	testSunsetEstimatorGeneral(t, "2022-03-26 18:33:38 CET", horizonPluederwiese)
+	testSunsetEstimatorGeneral(t, "2022-03-26 18:33:36 CET", horizonPluederwiese)
 }
