@@ -3,6 +3,8 @@ package location
 import (
 	"log"
 	"net/http"
+	"os"
+	"path"
 
 	"github.com/tkrajina/go-elevations/geoelevations"
 )
@@ -15,8 +17,12 @@ var (
 func initSrtm() {
 	log.Printf("Initialiting Srtm")
 
-	var err error
-	srtm, err = geoelevations.NewSrtm(http.DefaultClient)
+	storage, err := geoelevations.NewLocalFileSrtmStorage(path.Join(os.Getenv("HOME"), ".geoelevations"))
+	if err != nil {
+		panic(err)
+	}
+
+	srtm, err = geoelevations.NewSrtmWithCustomStorage(http.DefaultClient, storage)
 	if err != nil {
 		panic(err)
 	}
