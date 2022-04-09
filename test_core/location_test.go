@@ -1,4 +1,4 @@
-package test
+package test_core
 
 import (
 	"math"
@@ -38,8 +38,8 @@ func testAzimutAngleToGeneral(t *testing.T, a, b *location.Location, want float6
 }
 
 func TestAzimutAngleTo(t *testing.T) {
-	a := location.NewLocation("A", 51.5, 0)
-	b := location.NewLocation("B", -22.97, -43.18)
+	a := location.NewLocation(51.5, 0)
+	b := location.NewLocation(-22.97, -43.18)
 
 	want := float64(-2.4548) + 2*math.Pi
 

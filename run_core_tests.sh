@@ -1,5 +1,5 @@
 #!/bin/bash
 
-go test github.com/cloudsftp/Sunangel/test -v
+go test github.com/cloudsftp/Sunangel/test_core -v
 
 exit $?

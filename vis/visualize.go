@@ -65,5 +65,5 @@ func VisualizeHorizon(horizon *horizon.Horizon, startTime time.Time, duration ti
 	}
 	plot.AddFunc2d("Horizon", "lines", azimut, horizonAltitudeAtAzimut)
 
-	plot.SavePlot(fmt.Sprintf("Img/Horizons/%s.png", horizon.Place.Name))
+	plot.SavePlot(fmt.Sprintf("Img/Horizons/%s.png", "Unnamed")) // horizon.Place.Name))
 }

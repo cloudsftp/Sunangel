@@ -15,12 +15,12 @@ import (
 func main() {
 
 	date := time.Now().Add(-0 * 24 * time.Hour)
-	// place := location.NewLocation("Paragleiter", 48.8187132, 9.5878127)
-	// place := location.NewLocation("Burg", 48.8230357, 9.5823731)
-	// place := location.NewLocation("Freibad", 48.8292463, 9.5773359)
-	// place := location.NewLocation("Freibad oben", 48.83523, 9.57165)
-	// place := location.NewLocation("OWH", 48.814, 9.59172)
-	place := location.NewLocation("Pluderwiese", 48.8320969, 9.6042998)
+	// place := location.NewLocation(48.8187132, 9.5878127) // Paragleiter
+	// place := location.NewLocation(48.8230357, 9.5823731) // Burg
+	// place := location.NewLocation(48.8292463, 9.5773359) // Freibad
+	// place := location.NewLocation(48.83523, 9.57165) // Freibad oben
+	// place := location.NewLocation(48.814, 9.59172) // OWH
+	place := location.NewLocation(48.8320969, 9.6042998) // Pluederwiese
 
 	horizon := horizon.NewHorizon(place, 500)
 
