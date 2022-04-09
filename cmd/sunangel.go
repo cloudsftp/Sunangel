@@ -19,8 +19,8 @@ func main() {
 	// place := location.NewLocation(48.8230357, 9.5823731) // Burg
 	// place := location.NewLocation(48.8292463, 9.5773359) // Freibad
 	// place := location.NewLocation(48.83523, 9.57165) // Freibad oben
-	// place := location.NewLocation(48.814, 9.59172) // OWH
-	place := location.NewLocation(48.8320969, 9.6042998) // Pluederwiese
+	place := location.NewLocation(48.814, 9.59172) // OWH
+	// place := location.NewLocation(48.8320969, 9.6042998) // Pluederwiese
 
 	horizon := horizon.NewHorizon(place, 500)
 

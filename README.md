@@ -2,7 +2,7 @@
 
 ![version](https://img.shields.io/badge/Version-v0.0.0-blue.svg)
 ![unit test status](https://github.com/cloudsftp/Sunangel/actions/workflows/core_unit_tests.yaml/badge.svg?branch=develop)
-![unit test status](https://github.com/cloudsftp/Sunangel/actions/workflows/cli_unit_tests.yaml/badge.svg?branch=feature/command_line)
+![unit test status](https://github.com/cloudsftp/Sunangel/actions/workflows/cli_unit_tests.yaml/badge.svg?branch=develop)
 
 ## Motivation
 

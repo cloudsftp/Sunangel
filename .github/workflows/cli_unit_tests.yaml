@@ -1,4 +1,4 @@
-name: CLI Unit Tests Develop
+name: CLI Tests Develop
 
 on:
   push:

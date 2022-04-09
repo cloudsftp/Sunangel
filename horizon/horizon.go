@@ -15,16 +15,16 @@ const (
 type horizonArray [horizonAngleResolution]float64
 
 type Horizon struct {
-	Place        *location.Location
-	radiusIgnore float64 // radius to ignore when computing the horizon in meters
-	altitude     horizonArray
+	Place       *location.Location
+	startRadius int // radius to ignore when computing the horizon in meters
+	altitude    horizonArray
 }
 
-func NewHorizon(place *location.Location, radiusIgnore float64) *Horizon {
+func NewHorizon(place *location.Location, startRadius int) *Horizon {
 	horizon := Horizon{
-		Place:        place,
-		radiusIgnore: radiusIgnore,
-		altitude:     horizonArray{},
+		Place:       place,
+		startRadius: startRadius,
+		altitude:    horizonArray{},
 	}
 
 	horizon.compute()

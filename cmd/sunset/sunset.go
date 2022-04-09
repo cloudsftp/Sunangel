@@ -21,7 +21,7 @@ func main() {
 	}
 
 	place := location.NewLocation(arguments.Place.Latitude, arguments.Place.Longitude)
-	horizon := horizon.NewHorizon(place, arguments.RadiusIgnore)
+	horizon := horizon.NewHorizon(place, arguments.StartRadius)
 
 	date := time.Now().Add(time.Duration(arguments.DayOffset * 24 * int(time.Hour)))
 
