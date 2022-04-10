@@ -2,6 +2,7 @@ package args
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 )
 
@@ -66,5 +67,8 @@ func ParseLocationArguments(args []string) (*LocationArguments, error) {
 }
 
 func PrintLocationUsage(err error) {
+	fmt.Printf("%v\n\n", err)
+	fmt.Printf("Usage: \n")
 
+	os.Exit(2)
 }

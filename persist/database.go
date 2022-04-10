@@ -2,6 +2,7 @@ package persist
 
 import (
 	"encoding/binary"
+	"log"
 	"math"
 
 	"github.com/cloudsftp/Sunangel/dir"
@@ -17,6 +18,8 @@ var (
 
 func initializeDatabase() {
 	if !dbInitialized {
+		log.Printf("Initialiting Badger")
+
 		var err error
 		db, err = badger.Open(badger.DefaultOptions(dir.GetStoreDir("badger")))
 		if err != nil {

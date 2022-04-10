@@ -9,7 +9,16 @@ import (
 	"github.com/cloudsftp/Sunangel/location"
 )
 
+type SunMode int
+
+const (
+	Coordinates SunMode = iota
+	Name
+)
+
 type SunArguments struct {
+	Mode        SunMode
+	Name        string
 	Place       *location.Location
 	StartRadius int
 	DayOffset   int
@@ -27,24 +36,38 @@ func NewSunArguments(latitude, longitude float64, startRadius, dayOffset int) *S
 }
 
 func ParseSunArguments(args []string) (*SunArguments, error) {
-	if len(args) < 3 {
+	if len(args) < 2 {
 		return nil, fmt.Errorf("too few arguments")
 	}
 
+	arguments := &SunArguments{Mode: Coordinates}
 	latitude, err := strconv.ParseFloat(args[1], 64)
 	if err != nil {
-		return nil, fmt.Errorf("first argument is NaN")
+		arguments.Mode = Name
 	}
 
-	longitude, err := strconv.ParseFloat(args[2], 64)
-	if err != nil {
-		return nil, fmt.Errorf("second argument is NaN")
+	var variablesStartIndex int
+	switch arguments.Mode {
+	case Coordinates:
+		if len(args) < 3 {
+			return nil, fmt.Errorf("too few arguments for coordinates mode")
+		}
+
+		longitude, err := strconv.ParseFloat(args[2], 64)
+		if err != nil {
+			return nil, fmt.Errorf("second argument is NaN")
+		}
+
+		arguments.Place = location.NewLocation(latitude, longitude)
+		variablesStartIndex = 3
+	case Name:
+		arguments.Name = args[1]
+		variablesStartIndex = 2
+	default:
+		return nil, fmt.Errorf("unrecognized mode")
 	}
 
-	startRadius := 0
-	dayOffset := 0
-
-	for i := 3; i < len(args); i++ {
+	for i := variablesStartIndex; i < len(args); i++ {
 		parts := strings.Split(args[i], "=")
 		if len(parts) != 2 {
 			return nil, fmt.Errorf("wrong format %s", args[i])
@@ -57,22 +80,19 @@ func ParseSunArguments(args []string) (*SunArguments, error) {
 
 		switch parts[0] {
 		case "r":
-			startRadius = val
+			arguments.StartRadius = val
 		case "d":
-			dayOffset = val
+			arguments.DayOffset = val
 		default:
 			return nil, fmt.Errorf("unrecognized variable %s", args[i])
 		}
 	}
 
-	return &SunArguments{
-		Place:       location.NewLocation(latitude, longitude),
-		StartRadius: startRadius,
-		DayOffset:   dayOffset,
-	}, nil
+	return arguments, nil
 }
 
-func PrintSunUsage() {
+func PrintSunUsage(err error) {
+	fmt.Printf("%v\n\n", err)
 	fmt.Printf("Usage: \n")
 
 	os.Exit(2)

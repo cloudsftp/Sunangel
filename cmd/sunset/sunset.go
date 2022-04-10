@@ -8,6 +8,7 @@ import (
 	"github.com/cloudsftp/Sunangel/args"
 	"github.com/cloudsftp/Sunangel/horizon"
 	"github.com/cloudsftp/Sunangel/location"
+	"github.com/cloudsftp/Sunangel/persist"
 	"github.com/cloudsftp/Sunangel/sunset"
 )
 
@@ -17,10 +18,26 @@ const timeLayout = "15:04:05 MST"
 func main() {
 	arguments, err := args.ParseSunArguments(os.Args)
 	if err != nil {
-		args.PrintSunUsage()
+		args.PrintSunUsage(err)
 	}
 
-	place := location.NewLocation(arguments.Place.Latitude, arguments.Place.Longitude)
+	var place *location.Location
+	switch arguments.Mode {
+	case args.Coordinates:
+		place = location.NewLocation(arguments.Place.Latitude, arguments.Place.Longitude)
+	case args.Name:
+		place, err = persist.GetLocation(arguments.Name)
+		if err != nil {
+			fmt.Printf("\nLocation %s does not exist in the database\n\n", arguments.Name)
+			os.Exit(1)
+		}
+
+		fmt.Printf("\nSuccessfully loaded location %s\n\n", arguments.Name)
+	default:
+		fmt.Printf("\nUnexpected internal state. Exiting\n")
+		os.Exit(1)
+	}
+
 	horizon := horizon.NewHorizon(place, arguments.StartRadius)
 
 	date := time.Now().Add(time.Duration(arguments.DayOffset * 24 * int(time.Hour)))
@@ -28,7 +45,7 @@ func main() {
 	sunsetTime := sunset.EstimateSunsetOf(date, horizon)
 
 	fmt.Printf(
-		"\n\nResult:\nThe sun sets at %s on %s\n",
+		"\nResult:\n  The sun sets at %s on %s\n\n",
 		sunsetTime.Format(timeLayout),
 		sunsetTime.Format(dateLayout),
 	)

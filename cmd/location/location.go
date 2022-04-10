@@ -19,7 +19,7 @@ func main() {
 	case args.List:
 		locations := persist.GetLocations()
 
-		printLocationsAdded(locations)
+		printLocationsList(locations)
 	case args.Add:
 		place := location.NewLocation(arguments.Latitude, arguments.Longitude)
 		persist.AddLocation(arguments.Name, place)
@@ -35,12 +35,12 @@ func main() {
 }
 
 func printLocationsList(locations map[string]*location.Location) {
-	fmt.Print("\n\nLocations:\n\n")
+	fmt.Print("\nLocations:\n\n")
 	printLocations(locations)
 }
 
 func printLocationsAdded(locations map[string]*location.Location) {
-	fmt.Print("\n\nLocations added:\n\n")
+	fmt.Print("\nLocations added:\n\n")
 	printLocations(locations)
 }
 
@@ -52,5 +52,5 @@ func printLocations(locations map[string]*location.Location) {
 }
 
 func printLocationsDeleted(name string) {
-	fmt.Printf("\n\nLocations with name %s deleted\n", name)
+	fmt.Printf("\nLocations with name %s deleted\n", name)
 }
