@@ -76,6 +76,20 @@ func AddLocation(name string, place *location.Location) {
 		val := bytesFromLocation(place)
 		return txn.Set(key, val)
 	})
+
+	if err != nil {
+		panic(err)
+	}
+}
+
+func DeleteLocation(name string) {
+	initializeDatabase()
+
+	err := db.Update(func(txn *badger.Txn) error {
+		key := []byte(locationPrefix + name)
+		return txn.Delete(key)
+	})
+
 	if err != nil {
 		panic(err)
 	}
