@@ -15,7 +15,7 @@ jobs:
           path: |
             ~/go/pkg/mod
             ~/.cache/go-build
-            ~/.geoelevations
+            ~/.sunangel/geoelevations
           key: ${{ runner.os }}-core-tests-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-core-tests-

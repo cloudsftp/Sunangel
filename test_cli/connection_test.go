@@ -10,7 +10,7 @@ import (
 )
 
 func TestLocation(t *testing.T) {
-	var loc *location.Location = location.NewLocation(48.814, 9.11)
+	var loc *location.Location = location.NewLocation(48.814, 9.58)
 
 	var hor *horizon.Horizon = horizon.NewHorizon(loc, 500)
 
