@@ -12,23 +12,36 @@ const (
 	horizonAngleWidth      float64 = 2 * math.Pi / float64(horizonAngleResolution)
 )
 
-type horizonArray [horizonAngleResolution]float64
+type AltitudeArray [horizonAngleResolution]float64
 
 type Horizon struct {
-	Place        *location.Location
-	radiusIgnore float64 // radius to ignore when computing the horizon in meters
-	altitude     horizonArray
+	Place       *location.Location
+	startRadius int // radius to ignore when computing the horizon in meters
+	altitude    AltitudeArray
 }
 
-func NewHorizon(place *location.Location, radiusIgnore float64) *Horizon {
-	horizon := Horizon{
-		Place:        place,
-		radiusIgnore: radiusIgnore,
-		altitude:     horizonArray{},
+// NewHorizon returns the computed horizon for a given location.
+// The computation starts at the given startRadius
+func NewHorizon(place *location.Location, startRadius int) *Horizon {
+	horizon := &Horizon{
+		Place:       place,
+		startRadius: startRadius,
+		altitude:    AltitudeArray{},
 	}
 
 	horizon.compute()
-	return &horizon
+	return horizon
+}
+
+// NewHorizonWithAltitude returns a horizon with a given startRadius and altitude
+func NewHorizonWithAltitude(place *location.Location, r int, a AltitudeArray) *Horizon {
+	horizon := &Horizon{
+		Place:       place,
+		startRadius: r,
+		altitude:    a,
+	}
+
+	return horizon
 }
 
 // GetHorizonAngleAt returns the altitude angle of the horizon
@@ -44,4 +57,16 @@ func (horizon Horizon) GetAltitude(tgtAzimutAngle float64) float64 {
 	rightHorizonAngle := horizon.altitude[rightIndex]
 
 	return util.LinInt(tgtAzimutAngle, leftAzimutAngle, leftHorizonAngle, rightAzimutAngle, rightHorizonAngle)
+}
+
+// GetStartRadius returns the start radius of the given horizon.
+// Only use for testing!
+func (hor Horizon) GetStartRadius() int {
+	return hor.startRadius
+}
+
+// GetAltitudeArray returns the altitude array of the given horizon.
+// Only use for testing!
+func (hor Horizon) GetAltitudeArray() AltitudeArray {
+	return hor.altitude
 }

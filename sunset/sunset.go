@@ -11,6 +11,13 @@ import (
 // EstimateSunsetOf returns an estimate of the time of sunset
 // at a given time and place.
 func EstimateSunsetOf(date time.Time, horizon *horizon.Horizon) time.Time {
+	log.Printf(
+		"Estimating sunset for %s at %f, %f",
+		date.Format("2006-01-02"),
+		horizon.Place.Latitude,
+		horizon.Place.Longitude,
+	)
+
 	year := date.Year()
 	month := date.Month()
 	day := date.Day()
@@ -40,19 +47,10 @@ func binarySunsetSearch(lowerBound, upperBound time.Time, horizon *horizon.Horiz
 			lowerBound = newBound
 		}
 
-		log.Printf(
-			"Searching sunset, current range %s - %s, precision %v",
-			formatBound(lowerBound), formatBound(upperBound), currentSearchDuration,
-		)
-
 		if currentSearchDuration < limitSearchDuration {
 			break
 		}
 	}
 
 	return lowerBound.Round(limitSearchDuration)
-}
-
-func formatBound(date time.Time) string {
-	return date.Format("15:04:05.000 MST")
 }

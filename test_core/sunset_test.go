@@ -1,4 +1,4 @@
-package test
+package test_core
 
 import (
 	"testing"
@@ -15,9 +15,9 @@ var (
 	berlinTime       = time.FixedZone("CET", 3600)
 	berlinSummerTime = time.FixedZone("CEST", 2*3600)
 
-	locationFreibad      = location.NewLocation("Freibad", 48.8292463, 9.5773359)
-	locationOWH          = location.NewLocation("OWH", 48.814, 9.59172)
-	locationPluederwiese = location.NewLocation("Plüderwiese", 48.8320969, 9.6042998)
+	locationFreibad      = location.NewLocation(48.8292463, 9.5773359)
+	locationOWH          = location.NewLocation(48.814, 9.59172)
+	locationPluederwiese = location.NewLocation(48.8320969, 9.6042998)
 )
 
 func assertDatePreciselyEqual(t *testing.T, got, want time.Time) {

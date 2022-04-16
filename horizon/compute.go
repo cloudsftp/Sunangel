@@ -21,7 +21,7 @@ func (horizon *Horizon) compute() {
 		horizon.altitude[i] = -math.Pi
 	}
 
-	startSampleRadius := int(math.Max(math.Ceil(horizon.radiusIgnore/stepSizeMeters), 1))
+	startSampleRadius := int(math.Max(math.Ceil(float64(horizon.startRadius)/stepSizeMeters), 1))
 	for sampleRadius := startSampleRadius; sampleRadius <= maxSampleRadius; sampleRadius++ {
 		azimutAnglesMeasured, horizonAnglesMeasured := horizon.measureHorizonAngles(sampleRadius)
 

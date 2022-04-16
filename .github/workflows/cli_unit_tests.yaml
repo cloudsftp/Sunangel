@@ -1,12 +1,13 @@
-name: Core Tests Develop
+name: CLI Tests Develop
 
 on:
   push:
     branches:
       - develop
+      - feature/command_line
 
 jobs:
-  unit_tests:
+  cli_unit_tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -16,10 +17,10 @@ jobs:
             ~/go/pkg/mod
             ~/.cache/go-build
             ~/.sunangel/geoelevations
-          key: ${{ runner.os }}-core-tests-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-cli-tests-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }}-core-tests-
+            ${{ runner.os }}-cli-tests-
       - uses: actions/setup-go@v3
         with:
           go-version: 1.18
-      - run: bash run_core_tests.sh
+      - run: bash run_cli_tests.sh
