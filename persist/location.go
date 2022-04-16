@@ -1,9 +1,8 @@
 package persist
 
 import (
-	"strings"
-
 	"github.com/cloudsftp/Sunangel/location"
+	"github.com/cloudsftp/Sunangel/util"
 	badger "github.com/dgraph-io/badger/v3"
 )
 
@@ -20,16 +19,14 @@ func GetLocations() map[string]*location.Location {
 		for iter.Rewind(); iter.Valid(); iter.Next() {
 			item := iter.Item()
 
-			key := string(item.Key())
-			name := strings.Replace(key, locationPrefix, "", 1)
-
-			if key == locationPrefix+name { // Only if key starts with locationPrefix
+			if keyHasPrefix(item.Key(), locationPrefix) { // Only if key starts with locationPrefix
 				var location *location.Location
 				item.Value(func(val []byte) error {
 					location = locationFromBytes(val)
 					return nil
 				})
 
+				name := keyRemovePrefix(item.Key(), locationPrefix)
 				locations[name] = location
 			}
 		}
@@ -96,8 +93,8 @@ func DeleteLocation(name string) {
 }
 
 func locationFromBytes(val []byte) *location.Location {
-	latitude := float64FromBytes(val[:bytesIn64Bits])
-	longitude := float64FromBytes(val[bytesIn64Bits:])
+	latitude := util.Float64FromBytes(val[:bytesIn64Bits])
+	longitude := util.Float64FromBytes(val[bytesIn64Bits:])
 
 	return location.NewLocation(latitude, longitude)
 }
@@ -105,8 +102,8 @@ func locationFromBytes(val []byte) *location.Location {
 func bytesFromLocation(place *location.Location) []byte {
 	bytes := make([]byte, 2*bytesIn64Bits)
 
-	bytesFromFloat64(place.Latitude, bytes[:bytesIn64Bits])
-	bytesFromFloat64(place.Longitude, bytes[bytesIn64Bits:])
+	util.BytesFromFloat64(place.Latitude, bytes[:bytesIn64Bits])
+	util.BytesFromFloat64(place.Longitude, bytes[bytesIn64Bits:])
 
 	return bytes
 }

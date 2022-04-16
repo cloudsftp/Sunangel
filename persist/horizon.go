@@ -1,40 +1,35 @@
 package persist
 
 import (
+	"crypto/sha512"
+
 	"github.com/cloudsftp/Sunangel/horizon"
+	"github.com/cloudsftp/Sunangel/location"
+	"github.com/cloudsftp/Sunangel/util"
 	badger "github.com/dgraph-io/badger/v3"
 )
 
-func getHorizonStoreKey(horizon *horizon.Horizon) []byte {
-	// TODO: reimplement
-	// key := fmt.Sprintf("%02.4f,%02.4f", place.Latitude, place.Longitude)
-	return []byte("nil")
+const horizonPrefix = "Horizon: "
+
+func getHorizonStoreKey(place *location.Location, startRadius int) []byte {
+	preKey := make([]byte, 3*bytesIn64Bits)
+
+	util.BytesFromFloat64(place.Latitude, preKey[:bytesIn64Bits])
+	util.BytesFromFloat64(place.Longitude, preKey[bytesIn64Bits:2*bytesIn64Bits])
+	util.BytesFromFloat64(float64(startRadius), preKey[2*bytesIn64Bits:])
+
+	keyHash := sha512.Sum512(preKey)
+	return append([]byte(horizonPrefix), keyHash[:]...)
 }
 
-func tryLoadHorizon(horizon *horizon.Horizon) bool {
-	initializeDatabase()
-
-	err := db.View(func(txn *badger.Txn) error {
-		item, rerr := txn.Get(getHorizonStoreKey(horizon))
-		if rerr != nil {
-			return rerr
-		}
-
-		item.Value(func(val []byte) error {
-			horizonFromBytes(val)
-			return nil
-		})
-		return nil
-	})
-
-	return err == nil
-}
-
-func storeHorizon(horizon *horizon.Horizon) {
+func AddHorizon(horizon *horizon.Horizon) {
 	initializeDatabase()
 
 	err := db.Update(func(txn *badger.Txn) error {
-		return txn.Set(getHorizonStoreKey(horizon), bytesFromHorizon(horizon))
+		return txn.Set(
+			getHorizonStoreKey(horizon.Place, horizon.GetStartRadius()),
+			horizon.AltitudeToBytes(),
+		)
 	})
 
 	if err != nil {
@@ -42,40 +37,52 @@ func storeHorizon(horizon *horizon.Horizon) {
 	}
 }
 
-func bytesFromHorizon(horizon *horizon.Horizon) []byte {
-	val := make([]byte, 0*bytesIn64Bits)
+func GetHorizon(place *location.Location, startRadius int) (*horizon.Horizon, error) {
+	initializeDatabase()
 
-	// TODO: reimplement
-	/*
-		for i := 0; i < horizonAngleResolution; i++ {
-			position := i * bytesIn64Bits
-			bytes := make([]byte, bytesIn64Bits)
-			binary.LittleEndian.PutUint64(bytes, math.Float64bits(horizon[i]))
-
-			for j := 0; j < bytesIn64Bits; j++ {
-				val[position+j] = bytes[j]
-			}
+	var hor *horizon.Horizon
+	err := db.View(func(txn *badger.Txn) error {
+		item, err := txn.Get(getHorizonStoreKey(place, startRadius))
+		if err != nil {
+			return err
 		}
-	*/
 
-	return val
+		item.Value(func(val []byte) error {
+			altitude, err := horizon.AltitudeFromBytes(val)
+			if err != nil {
+				return err
+			}
+
+			hor = horizon.NewHorizonWithAltitude(place, startRadius, altitude)
+			return nil
+		})
+		return nil
+	})
+
+	return hor, err
 }
 
-func horizonFromBytes(val []byte) *horizon.Horizon {
-	horizon := &horizon.Horizon{}
+func DeleteHorizonAll() {
+	initializeDatabase()
 
-	// TODO: reimplement
-	/*
-		for i := 0; i < horizonAngleResolution; i++ {
-			var bytes = make([]byte, bytesIn64Bits)
+	err := db.Update(func(txn *badger.Txn) error {
+		iter := txn.NewIterator(badger.DefaultIteratorOptions)
+		defer iter.Close()
+		for iter.Rewind(); iter.Valid(); iter.Next() {
+			key := iter.Item().Key()
 
-			position := i * bytesIn64Bits
-			for j := 0; j < bytesIn64Bits; j++ {
-				bytes[j] = val[position+j]
+			if keyHasPrefix(key, horizonPrefix) {
+				err := txn.Delete(key)
+				if err != nil {
+					return err
+				}
 			}
-			horizon[i] = math.Float64frombits(binary.LittleEndian.Uint64(bytes))
 		}
-	*/
 
-	return horizon
+		return nil
+	})
+
+	if err != nil {
+		panic(err)
+	}
 }

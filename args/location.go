@@ -70,5 +70,7 @@ func PrintLocationUsage(err error) {
 	fmt.Printf("%v\n\n", err)
 	fmt.Printf("Usage: \n")
 
+	// TODO: print options
+
 	os.Exit(2)
 }

@@ -34,15 +34,22 @@ func main() {
 
 		fmt.Printf("\nSuccessfully loaded location %s\n\n", arguments.Name)
 	default:
-		fmt.Printf("\nUnexpected internal state. Exiting\n")
+		fmt.Print("\nUnexpected internal state. Exiting\n")
 		os.Exit(1)
 	}
 
-	horizon := horizon.NewHorizon(place, arguments.StartRadius)
+	hor, err := persist.GetHorizon(place, arguments.StartRadius)
+	if err != nil {
+		fmt.Print("Did not find horizon in the database. Computing horizon...\n\n")
+		hor = horizon.NewHorizon(place, arguments.StartRadius)
+		persist.AddHorizon(hor)
+	} else {
+		fmt.Print("Found horizon in database\n\n")
+	}
 
 	date := time.Now().Add(time.Duration(arguments.DayOffset * 24 * int(time.Hour)))
 
-	sunsetTime := sunset.EstimateSunsetOf(date, horizon)
+	sunsetTime := sunset.EstimateSunsetOf(date, hor)
 
 	fmt.Printf(
 		"\nResult:\n  The sun sets at %s on %s\n\n",

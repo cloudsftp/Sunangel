@@ -1,15 +1,15 @@
 package persist
 
 import (
-	"encoding/binary"
 	"log"
-	"math"
+	"strings"
 
 	"github.com/cloudsftp/Sunangel/dir"
 	badger "github.com/dgraph-io/badger/v3"
 )
 
-const bytesIn64Bits int = 8
+const bytesIn32Bits int = 4
+const bytesIn64Bits int = 2 * bytesIn32Bits
 
 var (
 	dbInitialized bool = false
@@ -30,10 +30,13 @@ func initializeDatabase() {
 	}
 }
 
-func float64FromBytes(bytes []byte) float64 {
-	return math.Float64frombits(binary.LittleEndian.Uint64(bytes))
+func keyHasPrefix(key []byte, prefix string) bool {
+	postfix := keyRemovePrefix(key, prefix)
+
+	return string(key) == prefix+postfix
 }
 
-func bytesFromFloat64(val float64, bytes []byte) {
-	binary.LittleEndian.PutUint64(bytes, math.Float64bits(val))
+func keyRemovePrefix(key []byte, prefix string) string {
+	keyStr := string(key)
+	return strings.Replace(keyStr, prefix, "", 1)
 }
