@@ -1,13 +1,16 @@
-name: CLI Tests Develop
+name: Build Develop
 
 on:
   push:
     branches:
       - develop
-      - feature/continuous_build 
+      - feature/continuous_build
+    tags:
+      - 'v.*'
 
 jobs:
-  cli_unit_tests:
+  build:
+    name: Build Application
     strategy:
       matrix:
         platform: [ubuntu-latest, macos-latest, windows-latest]
@@ -19,11 +22,11 @@ jobs:
           path: |
             ~/go/pkg/mod
             ~/.cache/go-build
-            ~/.sunangel/geoelevations
-          key: ${{ runner.os }}-cli-tests-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-build-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }}-cli-tests-
+            ${{ runner.os }}-build-
       - uses: actions/setup-go@v3
         with:
           go-version: 1.18
-      - run: bash run_cli_tests.sh
+      - run: bash install.sh
+      
