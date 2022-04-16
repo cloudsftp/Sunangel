@@ -1,0 +1,30 @@
+name: Build Develop
+
+on:
+  push:
+    branches:
+      - develop
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build Application
+    strategy:
+      matrix:
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-build-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+      - run: bash build.sh
