@@ -29,5 +29,6 @@ jobs:
         with:
           go-version: 1.18
       - run: bash build.sh
+      - run: cd Build && tar cfz SunangelBinaries${{ matrix.platform }}.tar.gz *
       - run: ls Build
       
