@@ -1,4 +1,4 @@
-name: Core Tests Develop
+name: Build Develop
 
 on:
   push:
@@ -6,7 +6,8 @@ on:
       - develop
 
 jobs:
-  unit_tests:
+  build:
+    name: Build Application
     strategy:
       matrix:
         platform: [ubuntu-latest, macos-latest, windows-latest]
@@ -18,11 +19,10 @@ jobs:
           path: |
             ~/go/pkg/mod
             ~/.cache/go-build
-            ~/.sunangel/geoelevations
-          key: ${{ runner.os }}-core-tests-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-build-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }}-core-tests-
+            ${{ runner.os }}-build-
       - uses: actions/setup-go@v3
         with:
           go-version: 1.18
-      - run: bash run_core_tests.sh
+      - run: bash build.sh
