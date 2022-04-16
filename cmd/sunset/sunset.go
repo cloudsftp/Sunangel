@@ -18,7 +18,7 @@ const timeLayout = "15:04:05 MST"
 func main() {
 	arguments, err := args.ParseSunArguments(os.Args)
 	if err != nil {
-		args.PrintSunUsage(err)
+		args.PrintSunUsage(os.Args[0], err)
 	}
 
 	var place *location.Location

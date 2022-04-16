@@ -12,7 +12,7 @@ import (
 func main() {
 	arguments, err := args.ParseLocationArguments(os.Args)
 	if err != nil {
-		args.PrintLocationUsage(err)
+		args.PrintLocationUsage(os.Args[0], err)
 	}
 
 	switch arguments.Mode {
@@ -30,7 +30,7 @@ func main() {
 
 		printLocationsDeleted(arguments.Name)
 	default:
-		args.PrintLocationUsage(fmt.Errorf("unrecognized command"))
+		args.PrintLocationUsage(os.Args[0], fmt.Errorf("unrecognized command"))
 	}
 }
 

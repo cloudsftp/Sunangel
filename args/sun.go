@@ -63,6 +63,10 @@ func ParseSunArguments(args []string) (*SunArguments, error) {
 	case Name:
 		arguments.Name = args[1]
 		variablesStartIndex = 2
+
+		if arguments.Name == "help" {
+			return nil, fmt.Errorf("help requested")
+		}
 	default:
 		return nil, fmt.Errorf("unrecognized mode")
 	}
@@ -91,11 +95,16 @@ func ParseSunArguments(args []string) (*SunArguments, error) {
 	return arguments, nil
 }
 
-func PrintSunUsage(err error) {
+func PrintSunUsage(cmd string, err error) {
 	fmt.Printf("%v\n\n", err)
-	fmt.Printf("Usage: \n")
-
-	// TODO: print options
+	fmt.Printf("Usage: %s (help | NAME | LAT LONG) [d=DAYOFFSET] [r=STARTRADIUS]\n\n", cmd)
+	fmt.Println("  Either NAME or LAT LONG is required as the first set of arguments")
+	fmt.Println("    If a NAME is entered, the program checks the database for stored locations")
+	fmt.Println("    If LAT and LONG are entered, the program uses these coordinates")
+	fmt.Println()
+	fmt.Println("  DAYOFFSET: Integer offset of the day relativeto today (tomorrow is d=1)")
+	fmt.Println("  STARTRADIUS: Integer radius to ignore when computing the horizon (one kilometer is r=1000)")
+	fmt.Println()
 
 	os.Exit(2)
 }

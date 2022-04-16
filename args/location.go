@@ -59,6 +59,8 @@ func ParseLocationArguments(args []string) (*LocationArguments, error) {
 		}
 
 		arguments.Name = args[2]
+	case "help":
+		return nil, fmt.Errorf("help requested")
 	default:
 		return nil, fmt.Errorf("%s is not recognized as command", args[1])
 	}
@@ -66,11 +68,15 @@ func ParseLocationArguments(args []string) (*LocationArguments, error) {
 	return arguments, nil
 }
 
-func PrintLocationUsage(err error) {
+func PrintLocationUsage(cmd string, err error) {
 	fmt.Printf("%v\n\n", err)
-	fmt.Printf("Usage: \n")
-
-	// TODO: print options
+	fmt.Printf("Usage: %s COMMAND [OPTIONS]\n\n", cmd)
+	fmt.Println("  COMMAND OPTIONS")
+	fmt.Println("  help                     Prints this information")
+	fmt.Println("  list                     Lists all stored locations")
+	fmt.Println("  add     NAME LAT LONG    Adds a location")
+	fmt.Println("  delete  NAME             Deletes a location")
+	fmt.Println()
 
 	os.Exit(2)
 }
