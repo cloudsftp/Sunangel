@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - develop
-    tags:
-      - 'v*'
+      - feature/ci
 
 jobs:
   cli_unit_tests:
@@ -27,4 +26,4 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: 1.18
-      - run: bash run_cli_tests.sh
+      - run: bash Scripts/run_cli_tests.sh

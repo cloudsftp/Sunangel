@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - develop
-    tags:
-      - 'v*'
+      - feature/ci
 
 jobs:
   build:
@@ -27,4 +26,4 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: 1.18
-      - run: bash build.sh
+      - run: bash Scripts/build.sh
