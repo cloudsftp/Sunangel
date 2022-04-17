@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/cloudsftp/Sunangel/angle"
-	"github.com/cloudsftp/Sunangel/startime"
 )
 
 const (
@@ -18,8 +17,8 @@ const (
 var starTimeDegreesPerHour float64 = angle.RadiansFromDegrees(15)
 
 func starTimeAt(date time.Time) float64 {
-	t0 := startime.JulianCenturiesSince2000ToMidnightOf(date)
-	t := startime.TimeOfDayAsDecimal(date)
+	t0 := julianCenturiesSince2000ToMidnightOf(date)
+	t := timeOfDayAsDecimal(date)
 
 	starTime := starTimeC0 + starTimeC1*t0 + starTimeC2*t
 	starTime = math.Mod(starTime, hoursInDay)
