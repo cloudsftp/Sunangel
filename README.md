@@ -21,7 +21,7 @@ Then we search for the time, the altitude of the sun is right at the horizon.
 ```
 git clone https://github.com/cloudsftp/Sunangel.git
 cd Sunangel
-git checkout master # make sure you are at the latest release, not on develop
+git checkout latest # make sure you are at the latest release, not on develop
 ./install.sh
 ```
 

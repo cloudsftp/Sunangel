@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/cloudsftp/Sunangel/args"
+	"github.com/cloudsftp/Sunangel/cmd/args"
 	"github.com/cloudsftp/Sunangel/horizon"
 	"github.com/cloudsftp/Sunangel/location"
 	"github.com/cloudsftp/Sunangel/persist"

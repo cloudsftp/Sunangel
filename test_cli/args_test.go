@@ -3,7 +3,7 @@ package test_cli
 import (
 	"testing"
 
-	"github.com/cloudsftp/Sunangel/args"
+	"github.com/cloudsftp/Sunangel/cmd/args"
 	"github.com/cloudsftp/Sunangel/location"
 )
 

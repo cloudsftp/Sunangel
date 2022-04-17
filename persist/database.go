@@ -4,7 +4,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/cloudsftp/Sunangel/dir"
+	"github.com/cloudsftp/Sunangel/util"
 	badger "github.com/dgraph-io/badger/v3"
 )
 
@@ -21,7 +21,7 @@ func initializeDatabase() {
 		log.Printf("Initialiting Badger")
 
 		var err error
-		db, err = badger.Open(badger.DefaultOptions(dir.GetStoreDir("badger")))
+		db, err = badger.Open(badger.DefaultOptions(util.GetStoreDir("badger")))
 		if err != nil {
 			panic(err)
 		}
