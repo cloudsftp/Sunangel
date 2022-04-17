@@ -1,4 +1,4 @@
-package test_cli
+package test_core
 
 import (
 	"testing"
