@@ -5,6 +5,10 @@
 [![build status](https://github.com/cloudsftp/Sunangel/actions/workflows/build.yaml/badge.svg?branch=develop)](https://github.com/cloudsftp/Sunangel/actions/workflows/build.yaml)
 [![release status](https://github.com/cloudsftp/Sunangel/actions/workflows/release.yaml/badge.svg)](https://github.com/cloudsftp/Sunangel/actions/workflows/release.yaml)
 
+## Archived
+
+#### This project moved to https://github.com/SunAngel-Project/SunangelCLI
+
 ## Motivation
 
 Weather Apps and other Sources of information give bad results for the time of sunset.
